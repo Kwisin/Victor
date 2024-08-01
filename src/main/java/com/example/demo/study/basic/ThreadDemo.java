@@ -1,4 +1,4 @@
-package com.example.demo.study;
+package com.example.demo.study.basic;
 
 
 import java.util.concurrent.ConcurrentHashMap;

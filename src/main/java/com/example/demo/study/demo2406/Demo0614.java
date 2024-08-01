@@ -1,4 +1,4 @@
-package com.example.demo.study;
+package com.example.demo.study.demo2406;
 
 import java.util.Hashtable;
 import java.util.concurrent.Callable;

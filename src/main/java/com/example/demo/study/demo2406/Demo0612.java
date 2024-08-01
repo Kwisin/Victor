@@ -1,4 +1,4 @@
-package com.example.demo.study;
+package com.example.demo.study.demo2406;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
