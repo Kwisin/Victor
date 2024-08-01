@@ -133,7 +133,6 @@ public class ThreadDemo {
 
         ReentrantLock reentrantLock = new ReentrantLock();
 
-
         LockSupport.park();
     }
 
