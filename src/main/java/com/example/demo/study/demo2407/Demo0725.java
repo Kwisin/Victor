@@ -1,6 +1,8 @@
 package com.example.demo.study.demo2407;
 
 
+import org.w3c.dom.ls.LSInput;
+
 import java.util.*;
 
 public class Demo0725 {
@@ -71,7 +73,7 @@ class groupAnagrams {
             return true;
         }
 
-        HashMap<Character, Integer> characterIntegerHashMap = new HashMap<>();
+        HashMap<Character, Integer> characterIntegerHashMap = new HashMap<Character, Integer>();
         for (char c : s1.toCharArray()) {
             characterIntegerHashMap.put(c, characterIntegerHashMap.getOrDefault(c, 0) + 1);
         }
@@ -159,21 +161,60 @@ class reverseKGroup {
     //输入：head = [1,2,3,4,5], k = 2
     //输出：[2,1,4,3,5]
 
-    //输入：head = [1,2,3,4,5], k = 3
+    //输入：head = [1,2,3,4,5,7,8,9,9,9], k = 6
+
+    // 5
+//    0,4
+//            1,3
+//            2,2
+//
+//6
+//            0,5  5
+//            1,4  3
+//            2,3  1
+
     //输出：[3,2,1,4,5]
     public ListNode reverseKGroup(ListNode head, int k) {
         if (head == null || head.next == null) {
             return head;
         }
+
         ListNode newHead = new ListNode();
-        ListNode newTail = newHead;
-
+        ListNode newTail = new ListNode();
         ListNode current = head;
-        int currentCount = k;
+        int count = k;
+        Stack<ListNode> nodeStack = new Stack<ListNode>();
         while (current != null) {
-
+            if (count == k) {
+//                newTail =
+            }
+            nodeStack.push(current);
+            count--;
+            if (count == 0) {
+                ListNode listNode = reBuild(nodeStack);
+            }
         }
+
+
+        return head;
+
+
     }
+
+    public ListNode reBuild(Stack<ListNode> nodeStack) {
+        ListNode tempNode = new ListNode();
+        while (!nodeStack.empty()) {
+            ListNode item = nodeStack.pop();
+            ListNode next = tempNode.next;
+            tempNode.next = item;
+            item.next = next;
+        }
+
+
+        return tempNode.next;
+    }
+
+
 }
 
 
@@ -193,17 +234,15 @@ class LRUCache {
     //[null, null, null, 1, null, -1, null, -1, 3, 4
 
 
-
     // 使用频率
     // 缓存值
     // 大小
     //
     public LRUCache(int capacity) {
-
     }
 
     public int get(int key) {
-
+        return 0;
     }
 
     public void put(int key, int value) {
