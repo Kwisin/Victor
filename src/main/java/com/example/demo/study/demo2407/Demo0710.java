@@ -6,15 +6,15 @@ import java.util.Stack;
 public class Demo0710 {
 
     public static void main(String[] args) {
-        Solution solution = new Solution();
-        int value = solution.calculate("1+1");
+        calculate calculate = new calculate();
+        int value = calculate.calculate("1+1");
         System.out.println(value);
     }
 
 
 }
 
-class Solution {
+class calculate {
     //    给你一个字符串表达式 s ，请你实现一个基本计算器来计算并返回它的值。
     //    注意:不允许使用任何将字符串作为数学表达式计算的内置函数，比如 eval() 。
     // (1+(4+5+2)-3)+(6+8)
