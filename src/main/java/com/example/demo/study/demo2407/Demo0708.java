@@ -4,6 +4,7 @@ package com.example.demo.study.demo2407;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Demo0708 {
@@ -17,31 +18,27 @@ public class Demo0708 {
 
     }
 
+    //AC
     public static String getReverseString(String s) {
         String[] split = s.split("\\s+");
-        String result = "";
+        StringBuilder result = new StringBuilder();
         int end = 0;
-        if (split.length >= 1 && split[0] == "") {
+        if (split.length >= 1 && Objects.equals(split[0], "")) {
             end = 1;
         }
         for (int i = split.length - 1; i >= end; i--) {
             if (i == end) {
-                result += split[i];
+                result.append(split[i]);
             } else {
-                result += split[i] + " ";
+                result.append(split[i]).append(" ");
             }
         }
 
         List<String> strings = Arrays.asList(s.split("\\s+"));
         Collections.reverse(strings);
-        strings.forEach(item -> {
-            System.out.println(item);
-        });
-        for (String t : strings) {
-            System.out.println(t);
-        }
+        strings.forEach(System.out::println);
 
-        return result;
+        return result.toString();
     }
 
 

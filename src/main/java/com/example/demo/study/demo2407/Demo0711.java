@@ -17,6 +17,7 @@ public class Demo0711 {
 }
 
 
+// 502 todo
 class MaximizedCapital {
     //    假设 力扣（LeetCode）即将开始 IPO 。为了以更高的价格将股票卖给风险投资公司，力扣 希望在 IPO 之前开展一些项目以增加其资本。
     //    由于资源有限，它只能在 IPO 之前完成最多 k 个不同的项目。帮助 力扣 设计完成最多 k 个不同项目后得到最大总资本的方式。
@@ -34,57 +35,11 @@ class MaximizedCapital {
     //输入：k = 3, w = 0, profits = [1,2,3], capital = [0,1,2]
     //输出：6
     public int findMaximizedCapital1(int k, int w, int[] profits, int[] capital) {
-        int result = w;
-        HashSet<Integer> integerHashSet = new HashSet<>();
-        for (int i = 0; i < k; i++) {
-            int index = -1;
-            int maxProfit = Integer.MIN_VALUE;
-            for (int j = 0; j < capital.length; j++) {
-                if (integerHashSet.contains(j) || capital[j] > result) {
-                    continue;
-                }
-                if (profits[j] >= maxProfit) {
-                    index = j;
-                    maxProfit = profits[j];
-                }
 
-            }
-
-            if (index < 0) {
-                return result;
-            }
-
-            integerHashSet.add(index);
-            result += maxProfit;
-        }
-        return result;
     }
 
     public int findMaximizedCapital(int k, int w, int[] profits, int[] capital) {
-        int n = profits.length;
-        int curr = 0;
-        int[][] arr = new int[n][2];
 
-        for (int i = 0; i < n; ++i) {
-            arr[i][0] = capital[i];
-            arr[i][1] = profits[i];
-        }
-        List<Integer> collect = Arrays.stream(profits).boxed().collect(Collectors.toList());
-        Arrays.sort(arr, Comparator.comparingInt(a -> a[0]));
-        PriorityQueue<Integer> pq = new PriorityQueue<>((x, y) -> y - x);
-        for (int i = 0; i < k; ++i) {
-            while (curr < n && arr[curr][0] <= w) {
-                pq.add(arr[curr][1]);
-                curr++;
-            }
-            if (!pq.isEmpty()) {
-                w += pq.poll();
-            } else {
-                break;
-            }
-        }
-
-        return w;
     }
 
 }
