@@ -35,11 +35,12 @@ class MaximizedCapital {
     //输入：k = 3, w = 0, profits = [1,2,3], capital = [0,1,2]
     //输出：6
     public int findMaximizedCapital1(int k, int w, int[] profits, int[] capital) {
+        return 0;
 
     }
 
     public int findMaximizedCapital(int k, int w, int[] profits, int[] capital) {
-
+        return 0;
     }
 
 }
