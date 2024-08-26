@@ -52,7 +52,7 @@ class calculate {
                     tempVal = tempVal * 10 + s.charAt(i) - '0';
                     i++;
                 }
-                result += flag * tempVal;
+                result += (int) (flag * tempVal);
             }
         }
 

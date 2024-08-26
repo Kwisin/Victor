@@ -42,24 +42,4 @@ public class Demo0708 {
     }
 
 
-    public static void TestThread () {
-        AtomicInteger tempInt = new AtomicInteger();
-
-        Thread thread = new Thread(() -> {
-            tempInt.getAndIncrement();
-        },"t1");
-
-        Thread thread2 = new Thread(() -> {
-            tempInt.getAndIncrement();
-        },"t2");
-
-        thread.start();
-        thread2.start();
-
-
-        System.out.println(tempInt);
-
-
-    }
-
 }
