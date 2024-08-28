@@ -38,18 +38,7 @@ class MaximizedCapital {
     //输入：k = 3, w = 0, profits = [1,2,3], capital = [0,1,2]
     //输出：6
     public int findMaximizedCapital(int k, int w, int[] profits, int[] capital) {
-        if (k == 0 || profits.length == 0) {
-            return 0;
-        }
-        Map<Integer, List<Integer>> positionMap = new HashMap<>();
-        for (int i = 0; i < capital.length; i++) {
-            if (positionMap.containsKey(capital[i])) {
-                positionMap.get(capital[i]).add(i);
-            }else {
-                positionMap.put(capital[i], List.of(i));
-            }
-        }
-        Stream.of(positionMap).sorted((t1,t2)->{t1.})
+        return 0;
     }
 
 }

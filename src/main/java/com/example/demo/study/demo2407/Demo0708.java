@@ -14,7 +14,6 @@ public class Demo0708 {
 //        输入：s = "the sky is blue"
 //        输出："blue is sky the"
 
-        TestThread();
 
     }
 
