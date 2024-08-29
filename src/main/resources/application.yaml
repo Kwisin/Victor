@@ -1,0 +1,5 @@
+user:
+  password: 123
+  name: first
+server:
+  port: 8081
