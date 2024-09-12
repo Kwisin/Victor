@@ -3,7 +3,7 @@ package com.example.demo.study.demo2407;
 public class Demo0715 {
 
     public static void main(String[] args) {
-        int i = new FirstMissingPositive().firstMissingPositive(new int[]{1,2,3});
+        int i = new FirstMissingPositive().firstMissingPositive(new int[]{1, 2, 3});
         System.out.printf(String.valueOf(i));
 
     }
@@ -25,17 +25,18 @@ class FirstMissingPositive {
         }
 
         for (int i = 0; i < nums.length; ) {
-            if (nums[i] >= nums.length) {
+            if (nums[i] >= nums.length || nums[i] <= 0) {
                 nums[i] = -1;
                 i++;
                 continue;
             }
-            if (nums[i] == i || nums[i] < 0) {
+            if (nums[i] == i) {
                 i++;
                 continue;
             }
             if (nums[nums[i]] < 0) {
                 nums[nums[i]] = nums[i];
+                nums[i] = -1;
                 i++;
             } else {
                 int temp = nums[nums[i]];
@@ -51,7 +52,7 @@ class FirstMissingPositive {
             }
         }
 
-        return nums.length + 1;
+        return nums[nums.length - 1] + 1;
     }
 }
 

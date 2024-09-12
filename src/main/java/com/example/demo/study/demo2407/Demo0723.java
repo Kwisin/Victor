@@ -3,13 +3,14 @@ package com.example.demo.study.demo2407;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class Demo0723 {
 
     public static void main(String[] args) {
         ladderLength ladderLength = new ladderLength();
-        List<String> strings = Arrays.asList(new String[]{"hot", "dog", "cog", "pot", "dot"});
-        int i = ladderLength.ladderLength("hot", "dog", strings);
+        List<String> strings = Arrays.asList(new String[]{"hot","dot","dog","lot","log","cog"});
+        int i = ladderLength.ladderLength("hit", "cog", strings);
         System.out.println(i);
     }
 
@@ -44,88 +45,39 @@ class ladderLength {
 
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
         HashMap<String, Boolean> stringBooleanHashMap = new HashMap<>();
-        for (String word : wordList) {
-            if (!word.equals(beginWord)) {
-                stringBooleanHashMap.put(word, true);
-            }
-        }
-
-        if (!stringBooleanHashMap.getOrDefault(endWord, false)) {
-            return 0;
-        }
-
-
-        List<String> strings = Arrays.asList(new String[]{beginWord});
-        for (String item : strings) {
-            for (String s : wordList) {
-                int diff = diff(item, s);
-                if (diff == 1) {
-
-                }
-
-
-            }
-        }
-        return ladderLength(beginWord, endWord, wordList, stringBooleanHashMap) + 1;
+        PriorityQueue<Integer> integers = new PriorityQueue<>();
+        ladderLength(beginWord, endWord, wordList, stringBooleanHashMap, integers);
+        return integers.peek();
     }
 
 
-    public int ladderLength1(String beginWord, String endWord, List<String> wordList) {
-        HashMap<String, Boolean> stringBooleanHashMap = new HashMap<>();
-        for (String word : wordList) {
-            if (!word.equals(beginWord)) {
-                stringBooleanHashMap.put(word, true);
-            }
-        }
-
-        if (!stringBooleanHashMap.getOrDefault(endWord, false)) {
-            return 0;
-        }
-
-        return ladderLength(beginWord, endWord, wordList, stringBooleanHashMap) + 1;
-
-    }
-
-    public int ladderLength(String beginWord, String endWord, List<String> wordList, HashMap<String, Boolean> stringBooleanHashMap) {
-
-        boolean flag = false;
-        int max = endWord.length() + 1;
+    public void ladderLength(String beginWord, String endWord, List<String> wordList, HashMap<String, Boolean> stringBooleanHashMap, PriorityQueue<Integer> integers) {
+        stringBooleanHashMap.put(beginWord, true);
         for (String s : wordList) {
-            if (!stringBooleanHashMap.getOrDefault(s, false)) {
+
+            if (stringBooleanHashMap.containsKey(s)) {
                 continue;
             }
-            int diff = diff(beginWord, s);
-            if (diff == 1) {
 
+            if (check(beginWord, s)) {
                 if (s.equals(endWord)) {
-                    return 1;
+                    stringBooleanHashMap.put(endWord, true);
+                    integers.add(stringBooleanHashMap.size());
+                    stringBooleanHashMap.remove(endWord);
+                    stringBooleanHashMap.remove(beginWord);
+                    return;
                 }
-
-                stringBooleanHashMap.remove(s);
-                flag = true;
-                int i = ladderLength(s, endWord, wordList, stringBooleanHashMap);
-                if (i != -1 && i < max) {
-                    max = i;
-                }
-                stringBooleanHashMap.put(s, true);
+                ladderLength(s, endWord, wordList, stringBooleanHashMap, integers);
             }
+
         }
-
-        if (!flag && !beginWord.equals(endWord)) {
-            return -1;
-        }
-
-        if (max == endWord.length() + 1) {
-            return -1;
-        }
-
-
-        return max + 1;
-
+        stringBooleanHashMap.remove(beginWord);
     }
 
-    // loof loff
-    public int diff(String word1, String word2) {
+    public boolean check(String word1, String word2) {
+        if (word1.length() != word2.length()) {
+            return false;
+        }
         int diff = 0;
 
         char[] chars1 = word1.toCharArray();
@@ -133,10 +85,14 @@ class ladderLength {
 
         for (int i = 0; i < chars1.length; i++) {
             if (chars1[i] != chars2[i]) {
-                diff++;
+                if (diff == 0) {
+                    diff = 1;
+                } else {
+                    return false;
+                }
             }
         }
-        return diff;
+        return true;
     }
 }
 

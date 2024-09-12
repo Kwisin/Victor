@@ -3,6 +3,7 @@ package com.example.demo.study.demo2407;
 
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Stack;
 
 
 public class Demo0709 {
@@ -66,23 +67,31 @@ class isHappy {
 //155  最小栈  todo check
 class MinStack {
 
-    public MinStack() {
+    private LinkedList<Integer> dataStack;
+    private LinkedList<Integer> minStack;
+    private int min;
 
+    public MinStack() {
+        dataStack = new LinkedList<>();
+        minStack = new LinkedList<>();
+        min = Integer.MAX_VALUE;
     }
 
     public void push(int val) {
-
+        dataStack.addLast(val);
+        minStack.add(Math.min(val, min));
     }
 
     public void pop() {
-
+        dataStack.pop();
+        minStack.pop();
     }
 
     public int top() {
-        return 0;
+        return dataStack.getLast();
     }
 
     public int getMin() {
-        return 0;
+        return minStack.getLast();
     }
 }
