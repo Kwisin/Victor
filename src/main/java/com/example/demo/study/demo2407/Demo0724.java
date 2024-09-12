@@ -1,18 +1,16 @@
 package com.example.demo.study.demo2407;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Stack;
+import java.util.*;
 
 public class Demo0724 {
 
     public static void main(String[] args) {
 
         numIslands numIslands = new numIslands();
-        char[][] temp = {{'1', '1', '1'},
-            {'0', '1', '0'},
-            {'1', '1', '1'}};
+        char[][] temp = {{'1', '1', '0', '0', '0'},
+                         {'1', '1', '0', '1', '0'},
+                         {'0', '0', '1', '1', '0'},
+                         {'0', '0', '0', '1', '1'}};
         int insert1 = numIslands.numIslands(temp);
         System.out.println();
 
@@ -206,54 +204,41 @@ class numIslands {
             return 0;
         }
 
-        HashSet<String> stringHashSet = new HashSet<>();
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
-                if (grid[i][j] == '0') {
-                    stringHashSet.add(i + "-" + j);
-                    continue;
-                }
-                if (stringHashSet.contains(i + "-" + j)) {
-                    continue;
-                }
+        for (int row = 0; row < grid.length; row++) {
+            for (int col = 0; col < grid[0].length; col++) {
+                if (grid[row][col] == '1') {
+                    isLandNum++;
+                    LinkedList<int[]> ints = new LinkedList<>();
+                    ints.addLast(new int[]{row, col});
+                    while (ints.size() > 0) {
+                        int[] first = ints.pop();
+                        grid[first[0]][first[1]] = '0';
 
-                isLandNum++;
-                stringHashSet.add(i + "-" + j);
-
-                //加入队列
-                //队列不为空，向四周找出范围
-                ArrayDeque<int[]> ints = new ArrayDeque<>();
-                ints.add(new int[]{i, j});
-                while (!ints.isEmpty()) {
-                    int[] pop = ints.pop();
-                    int x = pop[0];
-                    int y = pop[1];
-                    stringHashSet.add(x + "-" + y);
-
-                    if (x + 1 < grid.length && grid[x + 1][y] == '1') {
-                        if (!stringHashSet.contains(String.valueOf(x + 1) + "-" + y)) {
-                            ints.add(new int[]{x + 1, y});
+                        int upX = first[0] - 1;
+                        int upY = first[1];
+                        if (upX >= 0 && grid[upX][upY] == '1') {
+                            ints.addLast(new int[]{upX, upY});
                         }
-                    }
-                    if (y + 1 < grid[0].length && grid[x][y + 1] == '1') {
-                        if (!stringHashSet.contains(x + "-" + String.valueOf(y + 1))) {
-                            ints.add(new int[]{x, y + 1});
-                        }
-                    }
 
-                    if (x - 1 >= 0 && grid[x - 1][y] == '1') {
-                        if (!stringHashSet.contains(String.valueOf(x - 1) + "-" + y)) {
-                            ints.add(new int[]{x - 1, y});
+                        int downX = first[0] + 1;
+                        int downY = first[1];
+                        if (downX <= grid.length - 1 && grid[downX][downY] == '1') {
+                            ints.addLast(new int[]{downX, downY});
                         }
-                    }
-                    if (y - 1 >= 0 && grid[x][y - 1] == '1') {
-                        if (!stringHashSet.contains(x + "-" + String.valueOf(y - 1))) {
-                            ints.add(new int[]{x, y - 1});
+
+                        int leftX = first[0];
+                        int leftY = first[1] - 1;
+                        if (leftY >= 0 && grid[leftX][leftY] == '1') {
+                            ints.addLast(new int[]{leftX, leftY});
+                        }
+
+                        int rightX = first[0];
+                        int rightY = first[1] + 1;
+                        if (rightY <= grid[0].length - 1 && grid[rightX][rightY] == '1') {
+                            ints.addLast(new int[]{rightX, rightY});
                         }
                     }
                 }
-
-
             }
         }
 

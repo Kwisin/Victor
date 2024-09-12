@@ -38,7 +38,32 @@ class MaximizedCapital {
     //输入：k = 3, w = 0, profits = [1,2,3], capital = [0,1,2]
     //输出：6
     public int findMaximizedCapital(int k, int w, int[] profits, int[] capital) {
-        return 0;
+        if (k <= 0) {
+            return 0;
+        }
+
+        int result = w;
+        HashSet<Integer> select = new HashSet<>();
+        for (int i = 0; i < k; i++) {
+            PriorityQueue<int[]> arrQueue = new PriorityQueue<>((o1, o2) -> o2[1] - o1[1]);
+            for (int index = 0; index < profits.length; index++) {
+                if (capital[index] > w || select.contains(index)) {
+                    continue;
+                }
+                arrQueue.add(new int[]{index, profits[index]});
+            }
+
+            if (arrQueue.size() == 0) {
+                return result;
+            }
+
+            w += arrQueue.peek()[1];
+            select.add(arrQueue.peek()[0]);
+        }
+
+
+        return result;
+
     }
 
 }
