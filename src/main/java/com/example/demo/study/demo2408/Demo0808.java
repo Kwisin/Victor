@@ -9,6 +9,7 @@ public class Demo0808 {
         int[][] board = {{0, 1, 0}, {0, 0, 1}, {1, 1, 1}, {0, 0, 0}};
         gameOfLife gameOfLife = new gameOfLife();
         gameOfLife.gameOfLife(board);
+
         System.out.println();
     }
 
