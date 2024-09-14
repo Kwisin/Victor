@@ -1,6 +1,7 @@
 package com.example.demo.study.demo2408;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class Demo0808 {
 
@@ -15,14 +16,14 @@ public class Demo0808 {
 }
 
 
-// todo
 class gameOfLife {
-    //给定一个包含 m × n 个格子的面板，每一个格子都可以看成是一个细胞。每个细胞都具有一个初始状态： 1 即为 活细胞 （live），或 0 即为 死细胞 （dead）。每个细胞与其八个相邻位置（水平，垂直，对角线）的细胞都遵循以下四条生存定律：
+    //给定一个包含 m × n 个格子的面板，每一个格子都可以看成是一个细胞。每个细胞都具有一个初始状态： 1 即为 活细胞 （live），或 0 即为 死细胞 （dead）。
+    // 每个细胞与其八个相邻位置（水平，垂直，对角线）的细胞都遵循以下四条生存定律：
     //
-    //如果活细胞周围八个位置的活细胞数少于两个，则该位置活细胞死亡；
-    //如果活细胞周围八个位置有两个或三个活细胞，则该位置活细胞仍然存活；
-    //如果活细胞周围八个位置有超过三个活细胞，则该位置活细胞死亡；
-    //如果死细胞周围正好有三个活细胞，则该位置死细胞复活；
+    //如果活细胞周围八个位置的活细胞数少于两个，则该位置活细胞死亡
+    //如果活细胞周围八个位置有两个或三个活细胞，则该位置活细胞仍然存活
+    //如果活细胞周围八个位置有超过三个活细胞，则该位置活细胞死亡
+    //如果死细胞周围正好有三个活细胞，则该位置死细胞复活
     //下一个状态是通过将上述规则同时应用于当前状态下的每个细胞所形成的，其中细胞的出生和死亡是同时发生的。给你 m x n 网格面板 board 的当前状态，返回下一个状态
 
     //0,1,0
@@ -36,56 +37,105 @@ class gameOfLife {
     //[0,1,0]
 
     //输入：board = [[0,1,0],[0,0,1],[1,1,1],[0,0,0]]
-    //输出：[[0,0,0],[1,0,1],[0,1,1],[0,1,0]]
+    //输出：        [[0,0,0],[1,0,1],[0,1,1],[0,1,0]]
 
     //输入：board = [[1,1],[1,0]]
-    //输出：[[1,1],[1,1]]
+    //输出：        [[1,1],[1,1]]
     public void gameOfLife(int[][] board) {
-        HashMap<String, Integer> stringIntegerHashMap = new HashMap<>();
-        //先遍历一轮设置各个点位附近活细胞数
+
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[0].length; col++) {
-                if (board[row][col] == 1) {
-                    setAliveNum(row, col, 1, stringIntegerHashMap);
+                LinkedList<int[]> ints = new LinkedList<>();
+                ints.add(new int[]{row, col});
+                while (ints.size() > 0) {
+                    int[] pop = ints.pop();
+                    int i = pop[0];
+                    int j = pop[1];
+                    if (checkChange(i, j, board)) {
+                        ints.add(new int[]{i - 1, j - 1});
+                        ints.add(new int[]{i - 1, j});
+                        ints.add(new int[]{i - 1, j + 1});
+                        ints.add(new int[]{i, j - 1});
+                        ints.add(new int[]{i, j + 1});
+                        ints.add(new int[]{i + 1, j - 1});
+                        ints.add(new int[]{i + 1, j});
+                        ints.add(new int[]{i + 1, j + 1});
+                    }
                 }
             }
         }
 
 
-        for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board[0].length; col++) {
-                checkAlive(row, col, board, stringIntegerHashMap);
-            }
-        }
-
     }
 
-    boolean checkAlive(int row, int col, int[][] board, HashMap<String, Integer> stringIntegerHashMap) {
-        boolean result = false;
+    boolean checkChange(int row, int col, int[][] board) {
+        if (row < 0 || row >= board.length || col < 0 || col >= board[0].length) {
+            return false;
+        }
+
         int current = board[row][col];
-        int aliveNum = stringIntegerHashMap.getOrDefault((row) + "" + (col), 0);
+        int aliveNum = getAliveNum(row, col, board);
 
         if (current == 1) {
             if (aliveNum < 2 || aliveNum > 3) {
-                result = true;
                 // 变成死细胞
                 board[row][col] = 0;
-                setAliveNum(row, col, -1, stringIntegerHashMap);
+                return true;
             }
-            return result;
         }
 
         if (current == 0) {
             if (aliveNum == 3) {
-                result = true;
                 // 变成活细胞
                 board[row][col] = 1;
-                setAliveNum(row, col, 1, stringIntegerHashMap);
+                return true;
             }
-            return result;
         }
 
         return false;
+
+    }
+
+    int getAliveNum(int row, int col, int[][] board) {
+        int res = 0;
+
+        int up = row - 1;
+        int down = row + 1;
+        int left = col - 1;
+        int right = col + 1;
+        if (up >= 0) {
+            if (left >= 0 && board[up][left] == 1) {
+                res++;
+            }
+            if (board[up][col] == 1) {
+                res++;
+            }
+            if (right <= board[0].length - 1 && board[up][right] == 1) {
+                res++;
+            }
+        }
+
+        if (left >= 0 && board[row][left] == 1) {
+            res++;
+        }
+        if (right <= board[0].length - 1 && board[row][right] == 1) {
+            res++;
+        }
+
+        if (down <= board[0].length - 1) {
+            if (left >= 0 && board[down][left] == 1) {
+                res++;
+            }
+            if (board[down][col] == 1) {
+                res++;
+            }
+            if (right <= board[0].length - 1 && board[down][right] == 1) {
+                res++;
+            }
+        }
+
+
+        return res;
 
     }
 
