@@ -153,25 +153,29 @@ class ListNode {
     }
 }
 
+
+// todo
 class reverseKGroup {
     //给你链表的头节点 head ，每 k 个节点一组进行翻转，请你返回修改后的链表。
     //k 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 k 的整数倍，那么请将最后剩余的节点保持原有顺序。
     //你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换
 
-    //输入：head = [1,2,3,4,5], k = 2
+    //输入：head = [1,2,3,4,5,6,7,8], k = 3
     //输出：[2,1,4,3,5]
+    // head-3,2,1-tail
 
     //输入：head = [1,2,3,4,5,7,8,9,9,9], k = 6
 
     // 5
-//    0,4
-//            1,3
-//            2,2
-//
-//6
-//            0,5  5
-//            1,4  3
-//            2,3  1
+    //            0,4
+    //            1,3
+    //            2,2
+    //
+
+    //6
+    //            0,5  5
+    //            1,4  3
+    //            2,3  1
 
     //输出：[3,2,1,4,5]
     public ListNode reverseKGroup(ListNode head, int k) {
@@ -179,26 +183,25 @@ class reverseKGroup {
             return head;
         }
 
-        ListNode newHead = new ListNode();
-        ListNode newTail = new ListNode();
-        ListNode current = head;
-        int count = k;
-        Stack<ListNode> nodeStack = new Stack<ListNode>();
+        boolean isFirst = true;
+        ListNode current = head.next;
+        ListNode newHead = head;
+        ListNode newTail = head;
+        k--;
+
         while (current != null) {
-            if (count == k) {
-//                newTail =
-            }
-            nodeStack.push(current);
-            count--;
-            if (count == 0) {
-                ListNode listNode = reBuild(nodeStack);
-            }
+            k--;
+            ListNode temp = new ListNode(current.val);
+            newHead = temp;
+            temp.next =
+            temp.next = newHead.next;
+            newHead.next = temp;
+
+            current = current.next;
+
         }
 
-
         return head;
-
-
     }
 
     public ListNode reBuild(Stack<ListNode> nodeStack) {
@@ -218,6 +221,26 @@ class reverseKGroup {
 }
 
 
+class LRUNode {
+    public LRUNode prev;
+    public LRUNode next;
+    private int val;
+
+    public LRUNode(int i) {
+        this.val = i;
+    }
+
+
+    public int getVal() {
+        return this.val;
+    }
+
+    public void setVal(int i) {
+        this.val = i;
+    }
+
+}
+
 
 class LRUCache {
 
@@ -234,37 +257,54 @@ class LRUCache {
     //输出
     //[null, null, null, 1, null, -1, null, -1, 3, 4
 
-    private LinkedList<Integer> tempArr;
-
-    private Map<Integer, Integer> tempMap;
-    private int index;
-    private int capacity;
+    private LRUNode head;
+    private LRUNode tail;
+    private Map<Integer, LRUNode> tempMap;
 
     public LRUCache(int capacity) {
-        this.tempArr = new LinkedList<>();
+        this.head = new LRUNode(0);
+        this.tail = new LRUNode(0);
+        this.head.next = this.tail;
+        this.tail.prev = this.head;
         this.tempMap = new HashMap<>();
-        this.index = 0;
-        this.capacity = capacity;
     }
 
     public int get(int key) {
-        Integer orDefault = this.tempMap.getOrDefault(key, -1);
-        if (orDefault < 0) {
-            return orDefault;
+
+        if (!this.tempMap.containsKey(key)) {
+            return -1;
         }
 
+        LRUNode lruNode = this.tempMap.get(key);
 
-        int val = this.tempArr.get(orDefault);
+        // 脱离双向链表
+        LRUNode next1 = lruNode.next;
+        LRUNode prev1 = lruNode.prev;
+        prev1.next = next1;
+        next1.prev = prev1;
 
-        this.tempArr.addFirst(val);
+        LRUNode next = this.head.next;
+        this.head.next = lruNode;
+        lruNode.prev = this.head;
+        lruNode.next = next;
 
-
-
-        return val;
+        return lruNode.getVal();
     }
 
     public void put(int key, int value) {
 
+        if (this.tempMap.containsKey(key)) {
+            this.tempMap.get(key).setVal(value);
+            return;
+        }
+
+        LRUNode lruNode = new LRUNode(value);
+
+        lruNode.next = this.head.next;
+        this.head.next.prev = lruNode;
+        this.head.next = lruNode;
+        lruNode.prev = this.head;
+        this.tempMap.put(key, lruNode);
     }
 
 }
