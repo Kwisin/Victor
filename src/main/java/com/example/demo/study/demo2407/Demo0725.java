@@ -218,6 +218,7 @@ class reverseKGroup {
 }
 
 
+
 class LRUCache {
 
     //请你设计并实现一个满足  LRU (最近最少使用) 缓存 约束的数据结构。
@@ -233,21 +234,39 @@ class LRUCache {
     //输出
     //[null, null, null, 1, null, -1, null, -1, 3, 4
 
+    private LinkedList<Integer> tempArr;
 
-    // 使用频率
-    // 缓存值
-    // 大小
-    //
+    private Map<Integer, Integer> tempMap;
+    private int index;
+    private int capacity;
+
     public LRUCache(int capacity) {
+        this.tempArr = new LinkedList<>();
+        this.tempMap = new HashMap<>();
+        this.index = 0;
+        this.capacity = capacity;
     }
 
     public int get(int key) {
-        return 0;
+        Integer orDefault = this.tempMap.getOrDefault(key, -1);
+        if (orDefault < 0) {
+            return orDefault;
+        }
+
+
+        int val = this.tempArr.get(orDefault);
+
+        this.tempArr.addFirst(val);
+
+
+
+        return val;
     }
 
     public void put(int key, int value) {
 
     }
+
 }
 
 /**
