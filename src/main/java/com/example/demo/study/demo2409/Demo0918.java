@@ -7,6 +7,8 @@ import java.util.*;
 public class Demo0918 {
 
     public static void main(String[] args) {
+        List<String> strings = new generateParenthesis().generateParenthesis(3);
+        System.out.println();
 
         longestValidParentheses longestValidParentheses = new longestValidParentheses();
         int i = longestValidParentheses.longestValidParentheses("(()())()())");
