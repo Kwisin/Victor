@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @PropertySource("classpath:custom.properties")
-@ComponentScan(basePackages = {"com.example.demo.service", "com.example.demo.service"})
+@ComponentScan(basePackages = {"com.example.demo.service"})
 @Import(value = TestXMLBean.class)
 public class CustomConfig {
     @Value("custom.name")
