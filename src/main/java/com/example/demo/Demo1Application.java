@@ -1,7 +1,10 @@
 package com.example.demo;
 
+import com.example.demo.service.TestComponentBean;
+import com.example.demo.service.TestDemo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication(scanBasePackages = {"com.example.demo.service"})
@@ -10,8 +13,9 @@ public class Demo1Application {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(Demo1Application.class, args);
-
+        ConfigurableApplicationContext context = SpringApplication.run(Demo1Application.class, args);
+        TestDemo testDemo = context.getBean("TestDemo", TestDemo.class);
+        System.out.println();
     }
 
 }

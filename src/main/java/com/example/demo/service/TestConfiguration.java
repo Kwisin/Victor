@@ -7,12 +7,12 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({TestComponentBean.class, MyImportBeanDefinitionRegistrar.class})
 public class TestConfiguration {
-    @Bean
-    public TestConfigurationBean getTestConfiguration() {
-        TestConfigurationBean testConfiguration = new TestConfigurationBean();
-        testConfiguration.setTestConfigurationBeanName(System.getProperty("custom.name"));
-        return testConfiguration;
-    }
+//    @Bean
+//    public TestConfigurationBean getTestConfiguration() {
+//        TestConfigurationBean testConfiguration = new TestConfigurationBean();
+//        testConfiguration.setTestConfigurationBeanName(System.getProperty("custom.name"));
+//        return testConfiguration;
+//    }
 }
 
 
