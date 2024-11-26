@@ -43,9 +43,23 @@ public class Demo1125 {
 //输出：0
 //解释：在这种情况下, 交易无法获得正利润，所以不参与交易可以获得最大利润，最大利润为 0
 
+
+/*
+这种是有状态的，没有持有股票 flag[n][0] ，持有股票 flag[n][1]，具体的值就是当前的盈利额
+今天没有股票两种情况，要么昨天没有股票，要么昨天有股票今天卖出
+flag[n][0] = max(flag[n-1][1]+prices[n],flag[n-1][0])
+
+今天有股票两种情况，要么昨天有股票，要么昨天没有股票今天买入
+flag[n][1] = max(flag[n-1][0]-prices[n],flag[n-1][1])
+ */
+
+
+
 class maxProfit {
     public int maxProfit(int[] prices) {
         return 0;
+
+        //
     }
 }
 
@@ -76,6 +90,15 @@ class maxProfit {
 //randomizedSet.insert(2); // 2 已在集合中，所以返回 false 。
 //randomizedSet.getRandom(); // 由于 2 是集合中唯一的数字，getRandom 总是返回 2
 // map[val][index]  list [index][val]   LinkedList node -> node
+
+
+/*
+首先insert和remove要O(1)判断是否存在，肯定是要用map存储
+getRandom想要达到O(1)，必须要用数组存储
+map中可以存储val值以及其在数组中对应的下标，关键在于remove的时候怎么能保证时间复杂度
+如果正常移除其中某个位置，后面的位置回自动前移，map全部都要重新调整，时间复杂度不对
+只有把最后一位和当前调换位置才能达成时间复杂度要求
+ */
 class RandomizedSet {
 
     private List<Integer> list;
