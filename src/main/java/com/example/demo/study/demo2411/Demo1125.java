@@ -54,12 +54,18 @@ flag[n][1] = max(flag[n-1][0]-prices[n],flag[n-1][1])
  */
 
 
-
 class maxProfit {
     public int maxProfit(int[] prices) {
-        return 0;
+        int length = prices.length;
+        int[][] profitFlag = new int[length][2];
+        profitFlag[0][0] = 0;
+        profitFlag[0][1] = -prices[0];
+        for (int i = 1; i < length; i++) {
+            profitFlag[i][0] = Math.max(profitFlag[i - 1][1] + prices[i], profitFlag[i - 1][0]);
+            profitFlag[i][1] = Math.max(profitFlag[i - 1][1], profitFlag[i - 1][0] - prices[i]);
+        }
 
-        //
+        return profitFlag[length - 1][0];
     }
 }
 
@@ -104,46 +110,52 @@ class RandomizedSet {
     private List<Integer> list;
     private Map<Integer, Integer> valMap;
     private Random random;
+    private int length;
 
     public RandomizedSet() {
         this.random = new Random();
         this.list = new ArrayList<>();
         this.valMap = new HashMap<>();
+        this.length = 0;//下一个空位
     }
 
     public boolean insert(int val) {
-        Integer integerVal = Integer.valueOf(val);
-        if (this.valMap.containsKey(integerVal)) {
+        if (this.valMap.containsKey(val)) {
             return false;
         }
+
         // 在list里面新增一条
-        this.list.add(integerVal);
+        this.list.add(this.length, val);
 
         // 在map中记录位置
-        this.valMap.put(integerVal, this.list.size() - 1);
+        this.valMap.put(val, this.length);
+
+        length++;
 
         return true;
     }
 
     public boolean remove(int val) {
-        Integer integerVal = Integer.valueOf(val);
-        if (!this.valMap.containsKey(integerVal)) {
+        if (!this.valMap.containsKey(val)) {
             return false;
         }
 
         //从map中取出位置
-        Integer index = this.valMap.get(integerVal);
+        Integer index = this.valMap.get(val);
 
         //从两边移除
-        this.list.remove(index.intValue());
-        this.valMap.remove(integerVal);
+        Integer lastOne = this.list.get(this.length - 1); //最后一个元素
+        this.list.set(index, lastOne);
+        this.valMap.put(lastOne, index);
+        this.valMap.remove(val);
+        this.length--;
 
         return true;
     }
 
     public int getRandom() {
         // 在list范围内去随机值
-        int randomIndex = this.random.nextInt(0, this.list.size());
+        int randomIndex = this.random.nextInt(0, this.length);
 
         // 从list中取val
         return this.list.get(randomIndex);

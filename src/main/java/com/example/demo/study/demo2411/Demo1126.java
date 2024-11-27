@@ -5,8 +5,7 @@ import java.util.*;
 public class Demo1126 {
 
     public static void main(String[] args) {
-        canCompleteCircuit canCompleteCircuit = new canCompleteCircuit();
-        int i = canCompleteCircuit.canCompleteCircuit(new int[]{2, 3, 4}, new int[]{3, 4, 3});
+        int trap = new trap().trap(new int[]{4,2,0,3,2,5});
         System.out.println();
 
     }
@@ -95,6 +94,12 @@ n 个孩子站成一排。给你一个整数数组 ratings 表示每个孩子的
 解释：你可以分别给第一个、第二个、第三个孩子分发 1、2、1 颗糖果。
      第三个孩子只得到 1 颗糖果，这满足题面中的两个条件。
 
+     [1,0,2]
+     [2,1,2]
+
+     [1,2,2]
+     [1,2,1]
+
 
    ratings[i-1] >= ratings[i]<= ratings[i+1]  ratings[i] = 1;
    ratings[i-1] < ratings[i] < ratings[i+1]  ratings[i] = ratings[i-1]+1
@@ -105,15 +110,32 @@ n 个孩子站成一排。给你一个整数数组 ratings 表示每个孩子的
  */
 class candy {
     public int candy(int[] ratings) {
-        HashMap<Integer, ArrayList<Integer>> objectObjectHashMap = new HashMap<>();
-        for (int i = 0; i < ratings.length; i++) {
-            ArrayList<Integer> orDefault = objectObjectHashMap.getOrDefault(ratings[i], new ArrayList<>());
-            orDefault.add(i);
-            objectObjectHashMap.put(ratings[i], orDefault);
+        int sum = 0;
+        int length = ratings.length;
+        int[] result = new int[length];
+        for (int i = 0; i < length; i++) {
+            result[i] = 1;
         }
 
-        objectObjectHashMap.
-        return 0;
+        //左规则
+        for (int i = 0; i < length; i++) {
+            if (i - 1 < 0) {
+                continue;
+            }
+            result[i] = ratings[i] > ratings[i - 1] ? result[i - 1] + 1 : result[i];
+        }
+
+        //右规则
+        for (int i = length - 1; i >= 0; i--) {
+            if (i + 1 >= length) {
+                sum += result[i];
+                continue;
+            }
+            result[i] = ratings[i] > ratings[i + 1] ? result[i + 1] + 1 : result[i];
+            sum += result[i];
+        }
+
+        return sum;
 
     }
 }
@@ -133,7 +155,29 @@ class candy {
 
 class trap {
     public int trap(int[] height) {
-        return 0;
+        int length = height.length;
+        int[] leftHeight = new int[length];
+        leftHeight[0] = height[0];
+        int[] rightHeight = new int[length];
+        rightHeight[length - 1] = height[length - 1];
+        int sum = 0;
+
+        //左规则
+        for (int i = 1; i < length; i++) {
+            leftHeight[i] = Math.max(height[i], leftHeight[i - 1]);
+        }
+
+        //右规则
+        for (int i = length - 2; i >= 0; i--) {
+            rightHeight[i] = Math.max(height[i], rightHeight[i + 1]);
+        }
+
+        for (int i = 1; i < length - 1; i++) {
+            sum += Math.min(leftHeight[i], rightHeight[i]) - height[i];
+        }
+
+
+        return sum;
 
     }
 }
