@@ -6,7 +6,7 @@ import java.util.List;
 public class Demo1128 {
 
     public static void main(String[] args) {
-        int t = new minSubArrayLen().minSubArrayLen(7, new int[]{2, 3, 1, 2, 4, 3});
+        int t = new minSubArrayLen().minSubArrayLen(11, new int[]{1,2,3,4,5});
         System.out.println();
     }
 
@@ -239,13 +239,17 @@ class minSubArrayLen {
         }
 
         int start = 0, end = 0;
-        int currentSum = 0;
+        int currentSum = nums[0];
         int min = Integer.MAX_VALUE;
-        while (end < length) {
-            currentSum += nums[end];
+        while (end < length && start <= end) {
             if (currentSum < target) {
                 end++;
+                if (end == length) {
+                    break;
+                }
+                currentSum += nums[end];
             } else if (currentSum > target) {
+                min = Math.min(min, end - start + 1);
                 currentSum -= nums[start];
                 start++;
             } else {
@@ -253,6 +257,9 @@ class minSubArrayLen {
                 currentSum -= nums[start];
                 start++;
                 end++;
+                if (end == length) {
+                    break;
+                }
                 currentSum += nums[end];
             }
         }
