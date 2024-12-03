@@ -7,7 +7,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 
-public class Demo1202 {
+public class Demo1203 {
 
     public static void main(String[] args) {
         int i = new longestConsecutive().longestConsecutive(new int[]{0, -1});
