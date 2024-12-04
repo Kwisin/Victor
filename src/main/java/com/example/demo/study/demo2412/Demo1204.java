@@ -6,7 +6,27 @@ import java.util.*;
 public class Demo1204 {
 
     public static void main(String[] args) {
-        int i = new longestConsecutive().longestConsecutive(new int[]{0, -1});
+        ListNode node0 = new ListNode(1);
+        ListNode nextNode1 = new ListNode(2);
+        ListNode nextNode2 = new ListNode(3);
+        ListNode nextNode3 = new ListNode(4);
+        ListNode nextNode4 = new ListNode(5);
+        ListNode nextNode5 = new ListNode(6);
+        ListNode nextNode6 = new ListNode(7);
+        ListNode nextNode7 = new ListNode(8);
+        ListNode nextNode8 = new ListNode(9);
+
+        node0.next = nextNode1;
+        nextNode1.next = nextNode2;
+        nextNode2.next = nextNode3;
+        nextNode3.next = nextNode4;
+        nextNode4.next = nextNode5;
+        nextNode5.next = nextNode6;
+        nextNode6.next = nextNode7;
+        nextNode7.next = nextNode8;
+
+        ListNode listNode = new reverseKGroup().reverseKGroup(node0, 2);
+
         System.out.println();
     }
 
@@ -17,7 +37,9 @@ public class Demo1204 {
 /*
 给你一个长度为 n 的链表，每个节点包含一个额外增加的随机指针 random ，该指针可以指向链表中的任何节点或空节点。
 
-构造这个链表的 深拷贝。 深拷贝应该正好由 n 个 全新 节点组成，其中每个新节点的值都设为其对应的原节点的值。新节点的 next 指针和 random 指针也都应指向复制链表中的新节点，并使原链表和复制链表中的这些指针能够表示相同的链表状态。复制链表中的指针都不应指向原链表中的节点 。
+构造这个链表的 深拷贝。 深拷贝应该正好由 n 个 全新 节点组成，其中每个新节点的值都设为其对应的原节点的值。
+新节点的 next 指针和 random 指针也都应指向复制链表中的新节点，并使原链表和复制链表中的这些指针能够表示相同的链表状态。
+复制链表中的指针都不应指向原链表中的节点 。
 
 例如，如果原链表中有 X 和 Y 两个节点，其中 X.random --> Y 。那么在复制链表中对应的两个节点 x 和 y ，同样有 x.random --> y 。
 
@@ -42,12 +64,13 @@ random_index：随机指针指向的节点索引（范围从 0 到 n-1）；如�
 
 
 // Definition for a Node.
-class Node {
+// todo 可优化，O(1)空间复杂度完成
+class copyRandomListNode {
     int val;
-    Node next;
-    Node random;
+    copyRandomListNode next;
+    copyRandomListNode random;
 
-    public Node(int val) {
+    public copyRandomListNode(int val) {
         this.val = val;
         this.next = null;
         this.random = null;
@@ -55,7 +78,45 @@ class Node {
 }
 
 class copyRandomList {
-    public Node copyRandomList(Node head) {
+    public copyRandomListNode copyRandomList(copyRandomListNode head) {
+        if (head == null) {
+            return null;
+        }
+        // 新的node列表
+        List<copyRandomListNode> nodeList = new ArrayList<>();
+        // 每个node对应的位置，方便后面定位randomNode位置
+        Map<copyRandomListNode, Integer> nodeIndexMap = new HashMap<>();
+        copyRandomListNode current = head;
+        int index = 0;
+        while (current != null) {
+            copyRandomListNode copyNode = new copyRandomListNode(current.val);
+            nodeList.add(copyNode);
+            nodeIndexMap.put(current, index);
+            index++;
+            current = current.next;
+        }
+
+        current = head;
+        Map<copyRandomListNode, Integer> randomNodeIndexMap = new HashMap<>();
+        while (current != null) {
+            copyRandomListNode random = current.random;
+            if (random != null) {
+                randomNodeIndexMap.put(current, nodeIndexMap.get(random));
+            }
+            current = current.next;
+        }
+
+        current = head;
+        index = 0;
+        while (current != null) {
+            copyRandomListNode copyNode = nodeList.get(index);
+            copyNode.random = current.random == null ? null : nodeList.get(randomNodeIndexMap.get(current));
+            copyNode.next = index + 1 < nodeList.size() ? nodeList.get(index + 1) : null;
+            index++;
+            current = current.next;
+        }
+
+        return nodeList.get(0);
 
     }
 }
@@ -73,26 +134,56 @@ class copyRandomList {
  */
 
 // Definition for singly-linked list.
-class reverseBetweenNode {
+// todo 可优化，一次遍历完成反转
+class ListNode {
     int val;
-    reverseBetweenNode next;
+    ListNode next;
 
-    reverseBetweenNode() {
+    ListNode() {
     }
 
-    reverseBetweenNode(int val) {
+    ListNode(int val) {
         this.val = val;
     }
 
-    reverseBetweenNode(int val, reverseBetweenNode next) {
+    ListNode(int val, ListNode next) {
         this.val = val;
         this.next = next;
     }
 }
 
 class reverseBetween {
-    public reverseBetweenNode reverseBetween(reverseBetweenNode head, int left, int right) {
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        if (head == null || left >= right || left == 0) {
+            return head;
+        }
+        left--;
+        right--;
 
+        List<ListNode> nodeList = new ArrayList<>();
+        ListNode current = head;
+        while (current != null) {
+            nodeList.add(current);
+            current = current.next;
+        }
+
+        while (left < right) {
+            ListNode leftNode = nodeList.get(left);
+            ListNode rightNode = nodeList.get(right);
+
+            nodeList.set(left, rightNode);
+            nodeList.set(right, leftNode);
+
+            left++;
+            right--;
+        }
+
+        for (int i = 0; i < nodeList.size(); i++) {
+            ListNode node = nodeList.get(i);
+            node.next = i + 1 < nodeList.size() ? nodeList.get(i + 1) : null;
+        }
+
+        return nodeList.get(0);
     }
 }
 
@@ -107,33 +198,68 @@ k 是一个正整数，它的值小于或等于链表的长度。如果节点总
 输入：head = [1,2,3,4,5], k = 2
 输出：[2,1,4,3,5]
 
+1->2->3->4->5
+-1 2 1 3
+pre = -1   current = 1   next = 2
+-1-> 1
 
 输入：head = [1,2,3,4,5], k = 3
 输出：[3,2,1,4,5]
+pre    gapTail     current
+-1
+          1,         2,         3,         4,        5
+
+ gap = 2
 
 
  */
 
-//Definition for singly-linked list.
-class reverseKGroupListNode {
-    int val;
-    reverseKGroupListNode next;
-
-    reverseKGroupListNode() {
-    }
-
-    reverseKGroupListNode(int val) {
-        this.val = val;
-    }
-
-    reverseKGroupListNode(int val, reverseKGroupListNode next) {
-        this.val = val;
-        this.next = next;
-    }
-}
-
+// 你可以设计一个只用 O(1) 额外内存空间的算法解决此问题吗
 class reverseKGroup {
-    public reverseKGroupListNode reverseKGroup(reverseKGroupListNode head, int k) {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null || k == 0 || k == 1) {
+            return head;
+        }
 
+        // 统计长度
+        int length = 0;
+        ListNode current = head;
+        while (current != null) {
+            length++;
+            current = current.next;
+        }
+
+        ListNode newHead = new ListNode(-1);
+        newHead.next = head;
+
+        ListNode pre = newHead;
+        ListNode gapTail = head;
+        current = head.next;
+        int gap = k - 1;
+
+        while (current != null) {
+            ListNode nextCurrent = current.next;
+
+            if (length >= k) {
+                ListNode preNext = pre.next;
+                pre.next = current;
+                current.next = preNext;
+            } else {
+                pre.next = current;
+            }
+
+            current = nextCurrent;
+            gap--;
+            if (gap == 0) {
+                pre = gapTail;
+                gapTail = current;
+                current = current.next;
+                gap = k - 1;
+                length -= k;
+            }
+        }
+
+
+        return newHead.next;
     }
 }
