@@ -9,17 +9,6 @@ import java.util.Map;
 public class Demo1205 {
 
     public static void main(String[] args) {
-        LRUCache lruCache = new LRUCache(2);
-        lruCache.put(1, 1);
-        lruCache.put(2, 2);
-        int i = lruCache.get(1);
-        lruCache.put(3, 3);
-        int i1 = lruCache.get(2);
-        lruCache.put(4, 4);
-        int i2 = lruCache.get(1);
-        int i3 = lruCache.get(3);
-        int i4 = lruCache.get(4);
-
         System.out.println();
     }
 
@@ -183,96 +172,96 @@ lRUCache.get(4);    // 返回 4
 
  */
 
-class Node {
-    public int key;
-    public int val;
-    public Node pre;
-    public Node next;
+//class Node {
+//    public int key;
+//    public int val;
+//    public Node pre;
+//    public Node next;
+//
+//    public Node(int key, int val) {
+//        this.key = key;
+//        this.val = val;
+//    }
+//}
 
-    public Node(int key, int val) {
-        this.key = key;
-        this.val = val;
-    }
-}
-
-class LRUCache {
-
-    private int capacity;
-    private Map<Integer, Node> cache;
-    public Node head;
-    public Node tail;
-
-    public LRUCache(int capacity) {
-        this.capacity = capacity;
-        this.cache = new HashMap<>();
-        this.head = new Node(0, 0);
-        this.tail = new Node(0, 0);
-        this.head.next = this.tail;
-        this.tail.pre = this.head;
-    }
-
-    public int get(int key) {
-        Node node = cache.get(key);
-        if (node == null) {
-            return -1;
-        }
-        moveToHead(node);
-
-        return node.val;
-    }
-
-    public void put(int key, int value) {
-        Node node = cache.get(key);
-        if (node == null) {
-            node = new Node(key, value);
-            cache.put(key, node);
-            capacity--;
-        } else {
-            node.val = value;
-        }
-
-        // 移到最前面
-        moveToHead(node);
-
-
-        // 移除尾部
-        if (this.capacity < 0) {
-            Node removeTail = removeTail();
-            cache.put(removeTail.key, null);
-            capacity++;
-        }
-    }
-
-
-    public void moveToHead(Node node) {
-        Node next = this.head.next;
-        if (next != node) {
-            Node nextNode = node.next;
-            Node preNode = node.pre;
-            if (nextNode != null && preNode != null) {
-                nextNode.pre = preNode;
-                preNode.next = nextNode;
-            }
-
-            node.next = next;
-            next.pre = node;
-
-            node.pre = this.head;
-            this.head.next = node;
-        }
-
-    }
-
-    public Node removeTail() {
-        Node preNode = this.tail.pre;
-        Node newPreNode = preNode.pre;
-        if (newPreNode != null) {
-            newPreNode.next = tail;
-        }
-        tail.pre = newPreNode;
-        return preNode;
-    }
-}
+//class LRUCache {
+//
+//    private int capacity;
+//    private Map<Integer, Node> cache;
+//    public Node head;
+//    public Node tail;
+//
+//    public LRUCache(int capacity) {
+//        this.capacity = capacity;
+//        this.cache = new HashMap<>();
+//        this.head = new Node(0, 0);
+//        this.tail = new Node(0, 0);
+//        this.head.next = this.tail;
+//        this.tail.pre = this.head;
+//    }
+//
+//    public int get(int key) {
+//        Node node = cache.get(key);
+//        if (node == null) {
+//            return -1;
+//        }
+//        moveToHead(node);
+//
+//        return node.val;
+//    }
+//
+//    public void put(int key, int value) {
+//        Node node = cache.get(key);
+//        if (node == null) {
+//            node = new Node(key, value);
+//            cache.put(key, node);
+//            capacity--;
+//        } else {
+//            node.val = value;
+//        }
+//
+//        // 移到最前面
+//        moveToHead(node);
+//
+//
+//        // 移除尾部
+//        if (this.capacity < 0) {
+//            Node removeTail = removeTail();
+//            cache.put(removeTail.key, null);
+//            capacity++;
+//        }
+//    }
+//
+//
+//    public void moveToHead(Node node) {
+//        Node next = this.head.next;
+//        if (next != node) {
+//            Node nextNode = node.next;
+//            Node preNode = node.pre;
+//            if (nextNode != null && preNode != null) {
+//                nextNode.pre = preNode;
+//                preNode.next = nextNode;
+//            }
+//
+//            node.next = next;
+//            next.pre = node;
+//
+//            node.pre = this.head;
+//            this.head.next = node;
+//        }
+//
+//    }
+//
+//    public Node removeTail() {
+//        Node preNode = this.tail.pre;
+//        Node newPreNode = preNode.pre;
+//        if (newPreNode != null) {
+//            newPreNode.next = tail;
+//        }
+//        tail.pre = newPreNode;
+//        return preNode;
+//    }
+//}
 
 /**
  * Your LRUCache object will be instantiated and called as such:
