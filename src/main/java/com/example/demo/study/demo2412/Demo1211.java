@@ -1,9 +1,38 @@
 package com.example.demo.study.demo2412;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Demo1211 {
 
     public static void main(String[] args) {
+        TreeNode node1 = new TreeNode(3);
+
+        TreeNode nextNode2 = new TreeNode(5);
+        TreeNode nextNode3 = new TreeNode(1);
+        node1.left = nextNode2;
+        node1.right = nextNode3;
+
+        TreeNode nextNode4 = new TreeNode(6);
+        TreeNode nextNode5 = new TreeNode(2);
+        nextNode2.left = nextNode4;
+        nextNode2.right = nextNode5;
+
+        TreeNode nextNode6 = new TreeNode(0);
+        TreeNode nextNode7 = new TreeNode(8);
+        nextNode3.left = nextNode6;
+        nextNode3.right = nextNode7;
+
+        TreeNode nextNode8 = new TreeNode(7);
+        TreeNode nextNode9 = new TreeNode(4);
+
+        nextNode5.left = nextNode8;
+        nextNode5.right = nextNode9;
+
+        TreeNode treeNode = new lowestCommonAncestor().lowestCommonAncestor(node1, nextNode4, nextNode6);
         System.out.println();
     }
 
@@ -28,8 +57,45 @@ public class Demo1211 {
  */
 
 class maxPathSum {
+    private int max = Integer.MIN_VALUE;
+
     public int maxPathSum(TreeNode root) {
-        return 0;
+        if (root == null) {
+            return 0;
+        }
+        maxPathSumTest(root);
+        return this.max;
+    }
+
+    public int maxPathSumTest(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        TreeNode left = root.left;
+        TreeNode right = root.right;
+        int currVal = root.val;
+        if (left == null && right == null) {
+            this.max = Math.max(currVal, this.max);
+            return currVal;
+        }
+
+        int leftMax = maxPathSumTest(left);
+        int rightMax = maxPathSumTest(right);
+        int sideMax = 0;
+        int nodeMax = 0;
+        if (left == null) {
+            sideMax = Math.max(currVal, rightMax + currVal); // 路径可连接的最大值
+            nodeMax = Math.max(rightMax, sideMax); // 节点下的最大值
+        } else if (right == null) {
+            sideMax = Math.max(currVal, leftMax + currVal); // 路径可连接的最大值
+            nodeMax = Math.max(leftMax, sideMax); // 节点下的最大值
+        } else {
+            sideMax = Math.max(Math.max(leftMax, rightMax) + currVal, currVal); // 路径可连接的最大值
+            nodeMax = Math.max(Math.max(Math.max(leftMax, rightMax), sideMax), leftMax + rightMax + currVal); // 节点下的最大值
+        }
+
+        this.max = Math.max(nodeMax, this.max);
+        return sideMax;
     }
 }
 
@@ -47,9 +113,9 @@ int next()将指针向右移动，然后返回指针处的数字。
 
 输入
 ["BSTIterator", "next", "next", "hasNext", "next", "hasNext", "next", "hasNext", "next", "hasNext"]
-[[[7, 3, 15, null, null, 9, 20]], [], [], [], [], [], [], [], [], []]
+[[[7, 3, 15, null, null, 9, 20]],  [],  [],  [],  [],  [],   [],  [],   [],   [] ]
 输出
-[null, 3, 7, true, 9, true, 15, true, 20, false]
+[null,                             3,   7,  true, 9,  true,  15,  true, 20,  false]
 
 解释
 BSTIterator bSTIterator = new BSTIterator([7, 3, 15, null, null, 9, 20]);
@@ -70,20 +136,67 @@ bSTIterator.hasNext(); // 返回 False
 并使用 O(h) 内存。其中 h 是树的高度。
  */
 
+class BSTIteratorNode {
+    public TreeNode next;
+
+    public BSTIteratorNode(TreeNode next) {
+        this.next = next;
+    }
+}
+
 class BSTIterator {
+    private TreeNode head;
+    private TreeNode tail;
 
     public BSTIterator(TreeNode root) {
+        // 找出最小节点
+        TreeNode current = root;
+        while (current.left != null) {
+            current = current.left;
+        }
+        head = new TreeNode(current.val - 1);
+
+        // 中序遍历
+        MidScan(root);
+        System.out.println();
 
     }
 
-    public int next() {
-        return 0;
+    public void MidScan(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        TreeNode left = root.left;
+        TreeNode right = root.right;
 
+        // 先遍历左节点
+        MidScan(left);
+
+        // 中节点
+        TreeNode newNode = new TreeNode(root.val);
+        if (tail == null) {
+            tail = newNode;
+            head.right = tail;
+        } else {
+            tail.right = newNode;
+            tail = newNode;
+        }
+
+
+        // 再遍历右节点
+        MidScan(right);
+
+    }
+
+
+    public int next() {
+        int result = head.right.val;
+        head = head.right;
+        return result;
     }
 
     public boolean hasNext() {
-        return false;
-
+        return head.right != null;
     }
 }
 
@@ -108,7 +221,45 @@ class BSTIterator {
  */
 
 class lowestCommonAncestor {
+    List<TreeNode> midScanList = new ArrayList<>();
+    Map<TreeNode, Integer> nodeIndexMap = new HashMap<>();
+
+
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        return null;
+        midScan(root);
+
+        return lowestCommonAncestorTest(root, p, q);
+    }
+
+    public TreeNode lowestCommonAncestorTest(TreeNode root, TreeNode p, TreeNode q) {
+        if (midScanList.size() == 0) {
+            return null;
+        }
+
+        Integer rootIndex = nodeIndexMap.get(root);
+        Integer pIndex = nodeIndexMap.get(p);
+        Integer qIndex = nodeIndexMap.get(q);
+
+        if ((Math.min(pIndex, qIndex) <= rootIndex) && (Math.max(pIndex, qIndex) >= rootIndex)) {
+            return root;
+        } else if (pIndex < rootIndex && qIndex < rootIndex) {
+            return lowestCommonAncestorTest(root.left, p, q);
+        }
+        return lowestCommonAncestorTest(root.right, p, q);
+    }
+
+    public void midScan(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        TreeNode left = root.left;
+        TreeNode right = root.right;
+        midScan(left);
+
+        this.midScanList.add(root);
+        this.nodeIndexMap.put(root, this.midScanList.size() - 1);
+
+        midScan(right);
+
     }
 }
