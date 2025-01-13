@@ -10,7 +10,7 @@ public class Demo0113 {
 
     public static void main(String[] args) {
 //        List<List<Integer>> lists = new combinationSum().combinationSum(new int[]{2, 3, 6, 7}, 7);
-        int i = new totalNQueens().totalNQueens(4);
+        int i = new totalNQueens().totalNQueens(5);
         System.out.println();
     }
 
@@ -87,107 +87,119 @@ class combinationSum {
 /*
 n 皇后问题 研究的是如何将 n 个皇后放置在 n × n 的棋盘上，并且使皇后彼此之间不能相互攻击。
 给你一个整数 n ，返回 n 皇后问题 不同的解决方案的数量。
+[
+[1,0,0,0,0],
+[0,0,1,0,0],
+[0,0,0,0,1],
+[0,1,0,0,0],
+[0,0,0,1,0]
+]
  */
 
 class totalNQueens {
-    public int[][] valid;
     public int result = 0;
 
     public int totalNQueens(int n) {
         if (n == 0 || n == 1) {
             return n;
         }
-        this.valid = new int[n][n];
-        dfs(n, 0);
+        ArrayDeque<int[]> exist = new ArrayDeque<>();
+        dfs(n, 0, exist);
 
         return this.result;
     }
 
-    public void dfs(int n, int index) {
-        if (index == n) {
+    public void dfs(int n, int index, ArrayDeque<int[]> exist) {
+        if (exist.size() == n) {
             this.result++;
             return;
         }
         for (int i = 0; i < n; i++) {
-            if (this.valid[index][i] == 1) {
+            if (!checkPositionValid(index, i, n, exist)) {
                 continue;
             }
-            setValid(index, i, n);
-            dfs(n, index + 1);
-            reverseValid(index, i, n);
+            exist.addLast(new int[]{index, i});
+            dfs(n, index + 1, exist);
+            exist.removeLast();
         }
 
     }
 
-    public boolean checkPositionValid(int x, int y, int length) {
-        return x >= 0 && x < length && y >= 0 && y < length;
-
-    }
-
-    public void setValid(int x, int y, int length) {
-        this.valid[x][y] = 1;
-        for (int i = 1; i < length; i++) {
-            if (checkPositionValid(x - i, y - i, length)) {
-                this.valid[x - i][y - i] = 1;
-            }
-            if (checkPositionValid(x - i, y, length)) {
-                this.valid[x - i][y] = 1;
-            }
-            if (checkPositionValid(x - i, y + i, length)) {
-                this.valid[x - i][y + i] = 1;
-            }
-
-            if (checkPositionValid(x, y - i, length)) {
-                this.valid[x][y - i] = 1;
-            }
-            if (checkPositionValid(x, y + i, length)) {
-                this.valid[x][y + i] = 1;
-            }
-
-            if (checkPositionValid(x + i, y + i, length)) {
-                this.valid[x + i][y + i] = 1;
-            }
-            if (checkPositionValid(x + i, y, length)) {
-                this.valid[x + i][y] = 1;
-            }
-            if (checkPositionValid(x + i, y - i, length)) {
-                this.valid[x + i][y - i] = 1;
+    public boolean checkPositionValid(int x, int y, int length, ArrayDeque<int[]> exist) {
+        for (int[] item : exist) {
+            if (item[0] == x || item[1] == y || (item[1] - y) / (item[0] - x) == 1 || (item[1] - y) / (item[0] - x) == -1) {
+                return false;
             }
         }
-
+        return true;
     }
 
-    public void reverseValid(int x, int y, int length) {
-        this.valid[x][y] = 0;
-        for (int i = 0; i < length; i++) {
-            if (checkPositionValid(x - i, y - i, length)) {
-                this.valid[x - i][y - i] = 0;
-            }
-            if (checkPositionValid(x - i, y, length)) {
-                this.valid[x - i][y] = 0;
-            }
-            if (checkPositionValid(x - i, y + i, length)) {
-                this.valid[x - i][y + i] = 0;
-            }
+//    public void setValid(int x, int y, int length) {
+//        this.valid[x][y] = 1;
+//        for (int i = 1; i < length; i++) {
+//            if (checkPositionValid(x - i, y - i, length)) {
+//                this.valid[x - i][y - i] = 1;
+//            }
+//            if (checkPositionValid(x - i, y, length)) {
+//                this.valid[x - i][y] = 1;
+//            }
+//            if (checkPositionValid(x - i, y + i, length)) {
+//                this.valid[x - i][y + i] = 1;
+//            }
+//
+//            if (checkPositionValid(x, y - i, length)) {
+//                this.valid[x][y - i] = 1;
+//            }
+//            if (checkPositionValid(x, y + i, length)) {
+//                this.valid[x][y + i] = 1;
+//            }
+//
+//            if (checkPositionValid(x + i, y + i, length)) {
+//                this.valid[x + i][y + i] = 1;
+//            }
+//            if (checkPositionValid(x + i, y, length)) {
+//                this.valid[x + i][y] = 1;
+//            }
+//            if (checkPositionValid(x + i, y - i, length)) {
+//                this.valid[x + i][y - i] = 1;
+//            }
+//        }
+//
+//    }
+//
+//    public void reverseValid(int x, int y, int length) {
+//        this.valid[x][y] = 0;
+//        for (int i = 0; i < length; i++) {
+//            if (checkPositionValid(x - i, y - i, length)) {
+//                this.valid[x - i][y - i] = 0;
+//            }
+//            if (checkPositionValid(x - i, y, length)) {
+//                this.valid[x - i][y] = 0;
+//            }
+//            if (checkPositionValid(x - i, y + i, length)) {
+//                this.valid[x - i][y + i] = 0;
+//            }
+//
+//            if (checkPositionValid(x, y - i, length)) {
+//                this.valid[x][y - i] = 0;
+//            }
+//            if (checkPositionValid(x, y + i, length)) {
+//                this.valid[x][y + i] = 0;
+//            }
+//
+//            if (checkPositionValid(x + i, y + i, length)) {
+//                this.valid[x + i][y + i] = 0;
+//            }
+//            if (checkPositionValid(x + i, y, length)) {
+//                this.valid[x + i][y] = 0;
+//            }
+//            if (checkPositionValid(x + i, y - i, length)) {
+//                this.valid[x + i][y - i] = 0;
+//            }
+//        }
+//    }
 
-            if (checkPositionValid(x, y - i, length)) {
-                this.valid[x][y - i] = 0;
-            }
-            if (checkPositionValid(x, y + i, length)) {
-                this.valid[x][y + i] = 0;
-            }
 
-            if (checkPositionValid(x + i, y + i, length)) {
-                this.valid[x + i][y + i] = 0;
-            }
-            if (checkPositionValid(x + i, y, length)) {
-                this.valid[x + i][y] = 0;
-            }
-            if (checkPositionValid(x + i, y - i, length)) {
-                this.valid[x + i][y - i] = 0;
-            }
-        }
-    }
 }
 
 // 22
