@@ -187,6 +187,9 @@ class letterCombinations {
 
     public List<String> letterCombinations(String digits) {
         char[] chars = digits.toCharArray();
+        if (chars.length == 0) {
+            return new ArrayList<>();
+        }
         dfs(digits, 0, "");
         return new ArrayList<>(this.result);
     }
@@ -235,22 +238,22 @@ class combine {
         if (k == 0) {
             return new ArrayList<>();
         }
-        dfs(k, n, 1, new ArrayList<>());
+        dfs(k, n, 1, new ArrayDeque<>());
 
         return this.result;
 
     }
 
-    public void dfs(int k, int n, int index, List<Integer> curr) {
+    public void dfs(int k, int n, int index, ArrayDeque<Integer> curr) {
         if (curr.size() == k) {
-            this.result.add(curr);
+            this.result.add(new ArrayList<>(curr));
             return;
         }
 
         for (int i = index; i <= n; i++) {
-            curr.add(i);
-            dfs(k, n, index + 1, curr);
-            curr.remove(Integer.valueOf(i));
+            curr.addLast(i);
+            dfs(k, n, i + 1, curr);
+            curr.removeLast();
         }
 
     }
@@ -279,8 +282,21 @@ class combine {
  * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
-class Solution {
+class sortList {
     public ListNode sortList(ListNode head) {
+
+        PriorityQueue<Integer> integerPriorityQueue = new PriorityQueue<>();
+        ListNode curr = head;
+        while (curr != null) {
+            integerPriorityQueue.add(curr.val);
+            curr = curr.next;
+        }
+
+        curr = head;
+        while (curr != null) {
+            curr.val = integerPriorityQueue.poll();
+            curr = curr.next;
+        }
 
         return head;
     }
