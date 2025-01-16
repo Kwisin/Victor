@@ -165,10 +165,7 @@ class Solution {
 
 // 53
 /*
-给你一个整数数组 nums ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
-
-子数组
-是数组中的一个连续部分。
+给你一个整数数组 nums ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。子数组是数组中的一个连续部分。
 
 
 
@@ -200,7 +197,8 @@ class maxSubArray {
 
 环形数组 意味着数组的末端将会与开头相连呈环状。形式上， nums[i] 的下一个元素是 nums[(i + 1) % n] ， nums[i] 的前一个元素是 nums[(i - 1 + n) % n] 。
 
-子数组 最多只能包含固定缓冲区 nums 中的每个元素一次。形式上，对于子数组 nums[i], nums[i + 1], ..., nums[j] ，不存在 i <= k1, k2 <= j 其中 k1 % n == k2 % n 。
+子数组 最多只能包含固定缓冲区 nums 中的每个元素一次。形式上，对于子数组 nums[i], nums[i + 1], ..., nums[j]
+，不存在 i <= k1, k2 <= j 其中 k1 % n == k2 % n 。
 
 示例 1：
 
@@ -217,6 +215,34 @@ class maxSubArray {
 输入：nums = [3,-2,2,-3]
 输出：3
 解释：从子数组 [3] 和 [3,-2,2] 都可以得到最大和 3
+
+
+class Solution {
+    public int maxSubarraySumCircular(int[] nums) {
+        int n = nums.length;
+        int[] leftMax = new int[n];
+        // 对坐标为 0 处的元素单独处理，避免考虑子数组为空的情况
+        leftMax[0] = nums[0];
+        int leftSum = nums[0];
+        int pre = nums[0];
+        int res = nums[0];
+        for (int i = 1; i < n; i++) {
+            pre = Math.max(pre + nums[i], nums[i]);
+            res = Math.max(res, pre);
+            leftSum += nums[i];
+            leftMax[i] = Math.max(leftMax[i - 1], leftSum);
+        }
+
+        // 从右到左枚举后缀，固定后缀，选择最大前缀
+        int rightSum = 0;
+        for (int i = n - 1; i > 0; i--) {
+            rightSum += nums[i];
+            res = Math.max(res, rightSum + leftMax[i - 1]);
+        }
+        return res;
+    }
+}
+
  */
 
 class maxSubarraySumCircular {
@@ -376,20 +402,62 @@ class missingTwo {
  输出：10
 
 
+ [3, 6, 7],[2, 5, 6],[3, 4, 5],[1, 3, 4],[1, 1, 1]
+
 
 提示:
 箱子的数目不大于3000个。
+
+[7,13,5,]
+
+class Solution {
+    public int pileBox(int[][] box) {
+        Arrays.sort(box, (x, y) -> x[0] - y[0]);
+        int[] dp = new int[box.length];
+        int res = 0;
+        for(int i = 0; i < box.length; ++i){
+            for(int j = 0; j < i; ++j){
+                // i 的三维都要比 j 大
+                if(box[i][0] > box[j][0] && box[i][1] > box[j][1] && box[i][2] > box[j][2]){
+                    //在 0 <= j < i 范围内找到最大的 dp[j]
+                    dp[i] = Math.max(dp[i], dp[j]);
+                }
+            }
+            //最后加上最底端箱子的高度
+            dp[i] += box[i][2];
+            res = Math.max(dp[i], res);
+        }
+        return res;
+    }
+}
+
  */
+
+class Solution {
+    public int pileBox(int[][] box) {
+        Arrays.sort(box, (x, y) -> x[0] - y[0]);
+        int[] dp = new int[box.length];
+        int res = 0;
+        for(int i = 0; i < box.length; ++i){
+            for(int j = 0; j < i; ++j){
+                // i 的三维都要比 j 大
+                if(box[i][0] > box[j][0] && box[i][1] > box[j][1] && box[i][2] > box[j][2]){
+                    //在 0 <= j < i 范围内找到最大的 dp[j]
+                    dp[i] = Math.max(dp[i], dp[j]);
+                }
+            }
+            //最后加上最底端箱子的高度
+            dp[i] += box[i][2];
+            res = Math.max(dp[i], res);
+        }
+        return res;
+    }
+}
 
 class pileBox {
     public int pileBox(int[][] box) {
 
-        PriorityQueue<int[]> ints = new PriorityQueue<>(new Comparator<int[]>() {
-            @Override
-            public int compare(int[] o1, int[] o2) {
-                return (o2[0] + o2[1] + o2[2]) - (o1[0] + o1[1] + o1[2]);
-            }
-        });
+        PriorityQueue<int[]> ints = new PriorityQueue<>(((o1, o2) -> (o2[0] + o2[1] + o2[2]) - (o1[0] + o1[1] + o1[2])));
 
         for (int[] item : box) {
             ints.add(item);
@@ -421,5 +489,35 @@ class pileBox {
             newOne.add(curr);
             arrayDeques.add(newOne);
         }
+    }
+}
+
+// 300. 最长递增子序列
+/*
+给你一个整数数组 nums ，找到其中最长严格递增子序列的长度。
+
+子序列 是由数组派生而来的序列，删除（或不删除）数组中的元素而不改变其余元素的顺序。例如，[3,6,2,7] 是数组 [0,3,1,6,2,2,7] 的
+子序列
+。
+
+
+示例 1：
+
+输入：nums = [10,9,2,5,3,7,101,18]
+输出：4
+解释：最长递增子序列是 [2,3,7,101]，因此长度为 4 。
+示例 2：
+
+输入：nums = [0,1,0,3,2,3]
+输出：4
+示例 3：
+
+输入：nums = [7,7,7,7,7,7,7]
+输出：1
+ */
+
+class lengthOfLIS {
+    public int lengthOfLIS(int[] nums) {
+
     }
 }
