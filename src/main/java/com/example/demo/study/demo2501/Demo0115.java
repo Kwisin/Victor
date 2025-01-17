@@ -433,26 +433,26 @@ class Solution {
 
  */
 
-class Solution {
-    public int pileBox(int[][] box) {
-        Arrays.sort(box, (x, y) -> x[0] - y[0]);
-        int[] dp = new int[box.length];
-        int res = 0;
-        for(int i = 0; i < box.length; ++i){
-            for(int j = 0; j < i; ++j){
-                // i 的三维都要比 j 大
-                if(box[i][0] > box[j][0] && box[i][1] > box[j][1] && box[i][2] > box[j][2]){
-                    //在 0 <= j < i 范围内找到最大的 dp[j]
-                    dp[i] = Math.max(dp[i], dp[j]);
-                }
-            }
-            //最后加上最底端箱子的高度
-            dp[i] += box[i][2];
-            res = Math.max(dp[i], res);
-        }
-        return res;
-    }
-}
+//class Solution {
+//    public int pileBox(int[][] box) {
+//        Arrays.sort(box, (x, y) -> x[0] - y[0]);
+//        int[] dp = new int[box.length];
+//        int res = 0;
+//        for(int i = 0; i < box.length; ++i){
+//            for(int j = 0; j < i; ++j){
+//                // i 的三维都要比 j 大
+//                if(box[i][0] > box[j][0] && box[i][1] > box[j][1] && box[i][2] > box[j][2]){
+//                    //在 0 <= j < i 范围内找到最大的 dp[j]
+//                    dp[i] = Math.max(dp[i], dp[j]);
+//                }
+//            }
+//            //最后加上最底端箱子的高度
+//            dp[i] += box[i][2];
+//            res = Math.max(dp[i], res);
+//        }
+//        return res;
+//    }
+//}
 
 class pileBox {
     public int pileBox(int[][] box) {
@@ -519,6 +519,7 @@ class pileBox {
 class lengthOfLIS {
     public int lengthOfLIS(int[] nums) {
 
+        return 0;
     }
 
 }
