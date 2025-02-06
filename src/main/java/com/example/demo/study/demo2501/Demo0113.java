@@ -1,16 +1,14 @@
 package com.example.demo.study.demo2501;
 
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Demo0113 {
 
     public static void main(String[] args) {
 //        List<List<Integer>> lists = new combinationSum().combinationSum(new int[]{2, 3, 6, 7}, 7);
-        int i = new totalNQueens().totalNQueens(5);
+//        int i = new totalNQueens().totalNQueens(5);
+        List<String> strings = new generateParenthesis().generateParenthesis(8);
         System.out.println();
     }
 
@@ -216,9 +214,65 @@ class totalNQueens {
  */
 
 class generateParenthesis {
-    public List<String> generateParenthesis(int n) {
-        return null;
+    private List<String> result = new ArrayList<>();
+    private HashSet<String> exist = new HashSet<>();
 
+    public List<String> generateParenthesis(int n) {
+        StringBuilder curr = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            curr.append("(");
+        }
+        dfs(curr.toString(), n);
+        return result;
+    }
+
+    public void dfs(String curr, int n) {
+        if (n == 0) {
+            if (isValid(curr) && !this.exist.contains(curr)) {
+                this.result.add(curr);
+                this.exist.add(curr);
+            }
+            return;
+        }
+        for (int i = 0; i < curr.length(); i++) {
+            String newCurr = curr.substring(0, i + 1) + ")" + curr.substring(i + 1);
+            if (isNotValid(curr)) {
+                continue;
+            }
+            dfs(newCurr, n - 1);
+        }
+    }
+
+    public boolean isValid(String s) {
+        int temp = 0;
+        for (char c : s.toCharArray()) {
+            if (c == '(') {
+                temp++;
+            }
+            if (c == ')') {
+                temp--;
+                if (temp < 0) {
+                    return false;
+                }
+            }
+        }
+        return temp == 0;
+    }
+
+    public boolean isNotValid(String s) {
+        int temp = 0;
+        for (char c : s.toCharArray()) {
+            if (c == '(') {
+                temp++;
+            }
+            if (c == ')') {
+                temp--;
+                if (temp < 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
 
