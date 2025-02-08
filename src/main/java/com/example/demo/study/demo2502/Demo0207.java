@@ -190,7 +190,25 @@ aa b
 db
 输出：true
 
-输入：s1 = "aabcc", s2 = "dbbca", s3 = "aadbbbaccc"
+输入：s1 = "aab cc", s2 = "dbb ca", s3 = "aad bb baccc"
+s(i,j) 表示 s1的前i个字符    s2的前j个字符   和s3前i+j个字符   匹配的结果
+s(0,0)   1    s(0,1)   0    s(0,2)   0    s(0,3)   0     s(0,4)   0     s(0,5)   0
+s(1,0)   1    s(1,1)   0    0                   0               0               0
+s(2,0)   1    s(2,1)   1    1                   1               0               0
+s(3,0)   0    s(3,1)   0    1                   1
+s(4,0)   0
+s(5,0)   0
+
+
+
+[1,0,0,0,0,0],
+[1,0,0,0,0,0],
+[1,0,0,0,0,0],
+[0,0,0,0,0,0],
+[0,0,0,0,0,0],
+[0,0,0,0,0,0],
+
+s(i-1,j-1) = 1?
 
 
 输出：false
@@ -199,9 +217,9 @@ db
 输出：true
  */
 class isInterleave {
-    public boolean isInterleave(String s1, String s2, String s3) {
-        return dfs(s1, s2, s3) || dfs(s2, s1, s3);
-    }
+//    public boolean isInterleave(String s1, String s2, String s3) {
+//        return dfs(s1, s2, s3) || dfs(s2, s1, s3);
+//    }
 
     // 先s1 再s2   s1可以比s2多一个
     public boolean dfs(String s1, String s2, String s3) {
@@ -237,5 +255,35 @@ class isInterleave {
 
         }
         return result;
+    }
+
+
+    public boolean isInterleave(String s1, String s2, String s3) {
+        int n = s1.length(), m = s2.length(), t = s3.length();
+
+        if (n + m != t) {
+            return false;
+        }
+
+        boolean[][] f = new boolean[n + 1][m + 1];
+
+        f[0][0] = true;
+        for (int i = 0; i <= n; ++i) {
+            for (int j = 0; j <= m; ++j) {
+                int p = i + j - 1;
+                if (i > 0) {
+                    char s1c = s1.charAt(i - 1);
+                    char s3c = s3.charAt(p);
+                    f[i][j] = f[i][j] || (f[i - 1][j] && s1c == s3c);
+                }
+                if (j > 0) {
+                    char s2c = s2.charAt(j - 1);
+                    char s3c = s3.charAt(p);
+                    f[i][j] = f[i][j] || (f[i][j - 1] && s2c == s3c);
+                }
+            }
+        }
+
+        return f[n][m];
     }
 }
