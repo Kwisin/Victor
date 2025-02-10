@@ -142,3 +142,15 @@ class myPow {
         return result;
     }
 }
+
+// 72
+/*
+
+ */
+
+class minDistance {
+    public int minDistance(String word1, String word2) {
+        return 0;
+
+    }
+}
