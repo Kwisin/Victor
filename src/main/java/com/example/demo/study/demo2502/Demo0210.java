@@ -8,6 +8,7 @@ import java.util.HashSet;
 public class Demo0210 {
 
     public static void main(String[] args) {
+        double v = new myPow().myPow(2, 300000000);
         System.out.println();
     }
 
@@ -48,5 +49,96 @@ public class Demo0210 {
 class catMouseGame {
     public int catMouseGame(int[][] graph) {
         return 0;
+    }
+}
+
+// 50
+/*
+实现 pow(x, n) ，即计算 x 的整数 n 次幂函数（即，xn ）
+
+示例 1：
+输入：x = 2.00000, n = 10
+输出：1024.00000
+示例 2：
+输入：x = 2.10000, n = 3
+输出：9.26100
+示例 3：
+输入：x = 2.00000, n = -2
+输出：0.25000
+解释：2-2 = 1/22 = 1/4 = 0.25
+
+10000
+5000
+2500
+1250
+625
+624+1
+312
+156
+78
+39
+38+1
+19
+18+1
+9
+8+1
+4
+2
+1
+
+100000000
+
+1,2
+2,3
+3,5
+5,8
+8,13
+13,21
+
+ */
+class myPow {
+    public double myPow(double x, int n) {
+        if (n == 0) {
+            return 1;
+        }
+        if (n == 1) {
+            return x;
+        }
+        if (n == 2) {
+            return x * x;
+        }
+        boolean flag = false;
+        double result;
+        long newN = n;
+        if (newN < 0) {
+            flag = true;
+            newN = -newN;
+        }
+        result = myLongPow(x, newN);
+        if (flag) {
+            return 1 / result;
+        }
+        return result;
+    }
+
+
+    public double myLongPow(double x, long n) {
+        if (n == 0) {
+            return 1;
+        }
+        if (n == 1) {
+            return x;
+        }
+        if (n == 2) {
+            return x * x;
+        }
+        double result;
+        if (n % 2 == 0) {
+            double v = myLongPow(x, n / 2);
+            result = v * v;
+        } else {
+            result = myLongPow(x, n - 1) * x;
+        }
+        return result;
     }
 }
