@@ -6,7 +6,7 @@ import java.util.*;
 public class Demo0212 {
 
     public static void main(String[] args) {
-        String s = new largestNumber().largestNumber(new int[]{17,18,23,56});
+        String s = new largestNumber().largestNumber(new int[]{34323,3432});
         System.out.println();
     }
 
@@ -90,11 +90,32 @@ class maxProduct {
 输入：nums = [10,2]
 输出："210"
 示例 2：
-输入：nums = [3,30,34,5,9]
+输入：nums = [3,32,34,5,9]
 330
 303
 
+343
+334
+
 输出："9534330"
+
+nums =
+[111311,1113]
+
+添加到测试用例
+输出
+"1113111113"
+预期结果
+"1113 111311"
+
+nums =
+[34323,3432]
+
+添加到测试用例
+输出
+"34323 3432"
+预期结果
+"34323 4323"
  */
 
 class largestNumber {
@@ -106,15 +127,9 @@ class largestNumber {
         Arrays.sort(integers1, (o1, o2) -> {
             String o1Str = String.valueOf(o1);
             String o2Str = String.valueOf(o2);
-            int o1Len = o1Str.length();
-            int o2Len = o2Str.length();
-            for (int i = 0; i < Math.max(o1Len, o2Len); i++) {
-                if (i >= o1Len) {
-                    return o2Str.charAt(i) > '0' ? 1 : -1;
-                }
-                if (i >= o2Len) {
-                    return o1Str.charAt(i) > '0' ? -1 : 1;
-                }
+            o1Str = o1Str + o2Str;
+            o2Str = o2Str + o1Str;
+            for (int i = 0; i < o1Str.length(); i++) {
                 char o1Char = o1Str.charAt(i);
                 char o2Char = o2Str.charAt(i);
                 if (o2Char == o1Char) {
@@ -124,6 +139,9 @@ class largestNumber {
             }
             return 1;
         });
+        if (integers1[0] == 0){
+            return "0";
+        }
 
         StringBuilder stringBuilder = new StringBuilder();
         for (Integer item : integers1) {
