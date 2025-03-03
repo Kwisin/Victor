@@ -1,11 +1,20 @@
 package com.example.demo.study.demo2503;
 
 
-import java.util.List;
+import org.apache.el.stream.Stream;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Demo0303 {
 
     public static void main(String[] args) {
+        int calculate = new calculate().calculate("-3545+2001*21/3-200+3*5+3*3/6+4/2*4*5");
+        int i = new maximalSquare().maximalSquare(new char[][]{
+                {'1', '0', '1', '0', '0'},
+                {'1', '0', '1', '1', '1'},
+                {'1', '1', '1', '1', '1'},
+                {'1', '0', '0', '1', '0'}});
         System.out.println();
     }
 
@@ -14,7 +23,6 @@ public class Demo0303 {
 // 229. 多数元素 II
 /*
 给定一个大小为 n 的整数数组，找出其中所有出现超过 ⌊ n/3 ⌋ 次的元素。
-
 
 示例 1：
 
@@ -31,7 +39,30 @@ public class Demo0303 {
  */
 class majorityElement {
     public List<Integer> majorityElement(int[] nums) {
-        return null;
+        int length = nums.length;
+        if (length < 3) {
+            return Arrays.stream(nums).boxed().collect(Collectors.toList());
+        }
+        int target = length / 3;
+
+        HashMap<Integer, Integer> intCnt = new HashMap<>();
+        for (int i = 0; i < length; i++) {
+            int key = nums[i];
+            Integer orDefault = intCnt.getOrDefault(key, 0);
+            if (orDefault + length - 1 - i < target) {
+                intCnt.remove(key);
+                continue;
+            }
+            intCnt.put(key, orDefault + 1);
+        }
+        ArrayList<Integer> result = new ArrayList<>();
+        intCnt.forEach((key, val) -> {
+            if (val > target) {
+                result.add(key);
+            }
+        });
+
+        return result;
     }
 }
 
@@ -39,10 +70,16 @@ class majorityElement {
 /*
 在一个由 '0' 和 '1' 组成的二维矩阵内，找到只包含 '1' 的最大正方形，并返回其面积。
 
-输入：matrix = [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]
+输入：matrix = [
+['1","0","1","0","0"],
+["1","0","1","1","1"],
+["1","1","1","1","1"],
+["1","0","0","1","0"]]
 输出：4
 
-输入：matrix = [["0","1"],["1","0"]]
+输入：matrix = [
+["0","1"],
+["1","0"]]
 输出：1
 示例 3：
 
@@ -51,7 +88,59 @@ class majorityElement {
  */
 class maximalSquare {
     public int maximalSquare(char[][] matrix) {
-        return 0;
+        int row = matrix.length;
+        if (row == 0)
+            return 0;
+        int col = matrix[0].length;
+        if (col == 0)
+            return 0;
+
+        int result = 0;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (matrix[i][j] == 0) {
+                    continue;
+                }
+                int curr = 0;
+                int nextArea = 0;
+                ArrayDeque<int[]> integers = new ArrayDeque<>();
+                ArrayDeque<int[]> nextRound = new ArrayDeque<>();
+                HashSet<Integer> exist = new HashSet<>();
+                integers.add(new int[]{i, j});
+                exist.add(i * 2 + j * 3);
+                while (!integers.isEmpty()) {
+                    int[] pop = integers.pop();
+                    int i1 = pop[0];
+                    int i2 = pop[1];
+                    if (i1 >= row || i2 >= col || matrix[i1][i2] == '0') {
+                        break;
+                    } else {
+                        nextArea++;
+                    }
+
+                    if (!exist.contains((i1 + 1) * 2 + i2 * 3)) {
+                        nextRound.add(new int[]{i1 + 1, i2});
+                    }
+                    if (!exist.contains((i1) * 2 + (i2 + 1) * 3)) {
+                        nextRound.add(new int[]{i1, i2 + 1});
+                    }
+                    if (!exist.contains((i1 + 1) * 2 + (i2 + 1) * 3)) {
+                        nextRound.add(new int[]{i1 + 1, i2 + 1});
+                    }
+
+                    if (integers.isEmpty()) {
+                        integers.addAll(nextRound);
+                        curr += nextArea;
+                        nextArea = 0;
+                        nextRound.clear();
+                    }
+
+                }
+                result = Math.max(result, curr);
+            }
+        }
+
+        return result;
     }
 }
 
@@ -63,7 +152,11 @@ class maximalSquare {
 注意：不允许使用任何将字符串作为数学表达式计算的内置函数，比如 eval() 。
 
 示例 1：
-输入：s = "3+2*2"
+输入：s = "+-3545+2001*21/3+-200+3*5+3"
+-3545，2001*21/3 ,-200，3*5，3
+2001*21/3，200
+2001，21/3
+    21，3
 输出：7
 示例 2：
 输入：s = " 3/2 "
@@ -74,6 +167,53 @@ class maximalSquare {
  */
 class calculate {
     public int calculate(String s) {
-        return 0;
+        int length = s.length();
+        if (length == 0)
+            return 0;
+        for (int i = 0; i < length; i++) {
+            if (s.charAt(i) == '-') {
+                s = s.substring(0, i) + "+" + s.substring(i);
+                i++;
+            }
+        }
+        String[] addSplit = s.split("\\+");
+        int result = 0;
+        for (String item : addSplit) {
+            try {
+                if (item.equals("")) {
+                    continue;
+                }
+                result += Integer.parseInt(item);
+            } catch (NumberFormatException e) {
+                result += getMulResult(item);
+            }
+        }
+
+        return result;
+    }
+
+    public int getMulResult(String s) {
+        String[] mulSplit = s.split("\\*");
+        int result = 1;
+        for (String item : mulSplit) {
+            try {
+                if (item.equals("")) {
+                    continue;
+                }
+                result *= Integer.parseInt(item);
+            } catch (NumberFormatException e) {
+                result *= getDviResult(item);
+            }
+        }
+        return result;
+    }
+
+    public int getDviResult(String s) {
+        String[] dviSplit = s.split("/");
+        int result = Integer.parseInt(dviSplit[0]);
+        for (int i = 1; i < dviSplit.length; i++) {
+            result /= Integer.parseInt(dviSplit[i]);
+        }
+        return result;
     }
 }
