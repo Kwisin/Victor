@@ -25,15 +25,12 @@ public class Demo0303 {
 给定一个大小为 n 的整数数组，找出其中所有出现超过 ⌊ n/3 ⌋ 次的元素。
 
 示例 1：
-
 输入：nums = [3,2,3]
 输出：[3]
 示例 2：
-
 输入：nums = [1]
 输出：[1]
 示例 3：
-
 输入：nums = [1,2]
 输出：[1,2]
  */
@@ -71,9 +68,9 @@ class majorityElement {
 在一个由 '0' 和 '1' 组成的二维矩阵内，找到只包含 '1' 的最大正方形，并返回其面积。
 
 输入：matrix = [
-['1","0","1","0","0"],
-["1","0","1","1","1"],
-["1","1","1","1","1"],
+['1","1","1","0","0"],
+["1","1","2","1","1"],
+["1","0","1","2","1"],
 ["1","0","0","1","0"]]
 输出：4
 
@@ -96,49 +93,7 @@ class maximalSquare {
             return 0;
 
         int result = 0;
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < col; j++) {
-                if (matrix[i][j] == 0) {
-                    continue;
-                }
-                int curr = 0;
-                int nextArea = 0;
-                ArrayDeque<int[]> integers = new ArrayDeque<>();
-                ArrayDeque<int[]> nextRound = new ArrayDeque<>();
-                HashSet<Integer> exist = new HashSet<>();
-                integers.add(new int[]{i, j});
-                exist.add(i * 2 + j * 3);
-                while (!integers.isEmpty()) {
-                    int[] pop = integers.pop();
-                    int i1 = pop[0];
-                    int i2 = pop[1];
-                    if (i1 >= row || i2 >= col || matrix[i1][i2] == '0') {
-                        break;
-                    } else {
-                        nextArea++;
-                    }
 
-                    if (!exist.contains((i1 + 1) * 2 + i2 * 3)) {
-                        nextRound.add(new int[]{i1 + 1, i2});
-                    }
-                    if (!exist.contains((i1) * 2 + (i2 + 1) * 3)) {
-                        nextRound.add(new int[]{i1, i2 + 1});
-                    }
-                    if (!exist.contains((i1 + 1) * 2 + (i2 + 1) * 3)) {
-                        nextRound.add(new int[]{i1 + 1, i2 + 1});
-                    }
-
-                    if (integers.isEmpty()) {
-                        integers.addAll(nextRound);
-                        curr += nextArea;
-                        nextArea = 0;
-                        nextRound.clear();
-                    }
-
-                }
-                result = Math.max(result, curr);
-            }
-        }
 
         return result;
     }
