@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 public class Demo0304 {
 
     public static void main(String[] args) {
+//        int i = new maxSubArray().maxSubArray(new int[]{-2, 1, -3, 4, -1, 2, 1, -5, 4});
+        List<List<Integer>> lists = new combinationSum2().combinationSum2(new int[]{10, 1, 2, 7, 6, 1, 5}, 8);
         System.out.println();
     }
 
@@ -47,14 +49,23 @@ class TreeNode1 {
 
 class lowestCommonAncestor {
     public TreeNode1 lowestCommonAncestor(TreeNode1 root, TreeNode1 p, TreeNode1 q) {
-        return null;
+        if (p.val == q.val) {
+            return p;
+        }
+        if ((root.val >= p.val && root.val <= q.val) || (root.val >= q.val && root.val <= p.val)) {
+            return root;
+        }
+        if (p.val < root.val && q.val < root.val) {
+            return lowestCommonAncestor(root.left, p, q);
+        }
+
+        return lowestCommonAncestor(root.right, p, q);
     }
 }
 
 // 53. 最大子数组和
 /*
 给你一个整数数组 nums ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
-
 子数组是数组中的一个连续部分。
 
 
@@ -75,7 +86,18 @@ class lowestCommonAncestor {
  */
 class maxSubArray {
     public int maxSubArray(int[] nums) {
-        return 0;
+        int length = nums.length;
+        if (length == 0) {
+            return 0;
+        }
+        int[] dp = new int[length];
+        dp[0] = nums[0];
+        int result = dp[0];
+        for (int i = 1; i < length; i++) {
+            dp[i] = nums[i] + dp[i - 1] < 0 ? 0 : dp[i - 1];
+            result = Math.max(result, dp[i]);
+        }
+        return result;
     }
 }
 
@@ -89,8 +111,8 @@ candidates 中的每个数字在每个组合中只能使用 一次 。
 注意：解集不能包含重复的组合。
 
 示例 1:
-
 输入: candidates = [10,1,2,7,6,1,5], target = 8,
+1,1,2,5,6,7,10
 输出:
 [
 [1,1,6],
@@ -99,18 +121,43 @@ candidates 中的每个数字在每个组合中只能使用 一次 。
 [2,6]
 ]
 示例 2:
-
 输入: candidates = [2,5,2,1,2], target = 5,
 输出:
 [
 [1,2,2],
 [5]
 ]
+
+1 <= candidates.length <= 100
+1 <= candidates[i] <= 50
+1 <= target <= 30
  */
 
 class combinationSum2 {
+    public List<List<Integer>> result = new ArrayList<>();
+
     public List<List<Integer>> combinationSum2(int[] candidates, int target) {
-        return null;
+        Arrays.sort(candidates);
+        dfs(0, candidates, target, new ArrayList<>());
+        return this.result;
+    }
+
+    public void dfs(int index, int[] candidates, int target, List<Integer> curr) {
+        if (target == 0) {
+            this.result.add(new ArrayList<>(curr));
+            return;
+        }
+        if (target < 0) {
+            return;
+        }
+        for (int i = index; i < candidates.length; i++) {
+            if (i > index && candidates[i] == candidates[i - 1]) {
+                continue;
+            }
+            curr.add(candidates[i]);
+            dfs(i + 1, candidates, target - candidates[i], curr);
+            curr.remove(curr.size() - 1);
+        }
     }
 }
 
