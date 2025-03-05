@@ -14,7 +14,7 @@ public class Demo0303 {
                 {'1', '0', '1', '0', '0'},
                 {'1', '0', '1', '1', '1'},
                 {'1', '1', '1', '1', '1'},
-                {'1', '0', '0', '1', '0'}});
+                {'0', '0', '1', '1', '1'}});
         System.out.println();
     }
 
@@ -52,14 +52,14 @@ class majorityElement {
             }
             intCnt.put(key, orDefault + 1);
         }
-        ArrayList<Integer> result = new ArrayList<>();
+        HashSet<Integer> result = new HashSet<Integer>();
         intCnt.forEach((key, val) -> {
             if (val > target) {
                 result.add(key);
             }
         });
 
-        return result;
+        return new ArrayList<>(result);
     }
 }
 
@@ -122,10 +122,11 @@ class maximalSquare {
  */
 class calculate {
     public int calculate(String s) {
+        s = s.replaceAll(" ", "");
         int length = s.length();
         if (length == 0)
             return 0;
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == '-') {
                 s = s.substring(0, i) + "+" + s.substring(i);
                 i++;
@@ -135,7 +136,7 @@ class calculate {
         int result = 0;
         for (String item : addSplit) {
             try {
-                if (item.equals("")) {
+                if (item.isEmpty()) {
                     continue;
                 }
                 result += Integer.parseInt(item);
@@ -151,8 +152,11 @@ class calculate {
         String[] mulSplit = s.split("\\*");
         int result = 1;
         for (String item : mulSplit) {
+            if (item.isEmpty()) {
+                continue;
+            }
             try {
-                if (item.equals("")) {
+                if (item.isEmpty()) {
                     continue;
                 }
                 result *= Integer.parseInt(item);

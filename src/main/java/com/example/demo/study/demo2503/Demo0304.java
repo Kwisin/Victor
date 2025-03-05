@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 public class Demo0304 {
 
     public static void main(String[] args) {
-//        int i = new maxSubArray().maxSubArray(new int[]{-2, 1, -3, 4, -1, 2, 1, -5, 4});
-        List<List<Integer>> lists = new combinationSum2().combinationSum2(new int[]{10, 1, 2, 7, 6, 1, 5}, 8);
+        int i = new maxSubArray().maxSubArray(new int[]{-2, 1, -3, 4, -1, 2, 1, -5, 4});
+//        List<List<Integer>> lists = new combinationSum2().combinationSum2(new int[]{10, 1, 2, 7, 6, 1, 5}, 8);
         System.out.println();
     }
 
@@ -94,7 +94,7 @@ class maxSubArray {
         dp[0] = nums[0];
         int result = dp[0];
         for (int i = 1; i < length; i++) {
-            dp[i] = nums[i] + dp[i - 1] < 0 ? 0 : dp[i - 1];
+            dp[i] += nums[i] + Math.max(dp[i - 1], 0);
             result = Math.max(result, dp[i]);
         }
         return result;
