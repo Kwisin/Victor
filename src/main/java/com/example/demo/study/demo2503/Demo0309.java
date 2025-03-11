@@ -3,13 +3,17 @@ package com.example.demo.study.demo2503;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class Demo0309 {
 
     public static void main(String[] args) {
-        List<TreeNode> treeNodes = new generateTrees().generateTrees(3);
+//        List<TreeNode> treeNodes = new generateTrees().generateTrees(3);
+        int i = new maxPoints().maxPoints(new int[][]{{1, 1}, {3, 2}, {5, 3}, {4, 1}, {2, 3}, {1, 4}});
+//        int i = new maxPoints().maxPoints(new int[][]{{1, 1}, {2, 2}, {3, 3}});
         System.out.println();
+
     }
 
 }
@@ -95,8 +99,47 @@ class generateTrees {
  */
 class maxPoints {
     public int maxPoints(int[][] points) {
-        return 0;
+        ArrayList<ArrayList<int[]>> arrayLists = new ArrayList<>();
+        ArrayList<Integer> cnt = new ArrayList<>();
+        int result = Integer.MIN_VALUE;
+        for (int[] item : points) {
+            int size = arrayLists.size();
+            for (int i = 0; i < size; i++) {
+                ArrayList<int[]> target = arrayLists.get(i);
+                if (check(target, item)) {
+                    if (target.size() <= 1) {
+                        ArrayList<int[]> ints = new ArrayList<>(target);
+                        ints.add(item);
+                        arrayLists.add(ints);
+                        cnt.add(2);
+                        result = Math.max(result, 2);
+                    } else {
+                        cnt.set(i, cnt.get(i) + 1);
+                        result = Math.max(result, cnt.get(i));
+                    }
+                }
+            }
+            // 作为新起点
+            ArrayList<int[]> ints = new ArrayList<>();
+            ints.add(item);
+            arrayLists.add(ints);
+            cnt.add(ints.size());
+            result = Math.max(result, 1);
+        }
+        return result;
+    }
 
+    public boolean check(List<int[]> target, int[] item) {
+        if (target.size() <= 1) {
+            return true;
+        }
+        int[] ints = target.get(0);
+        int[] ints1 = target.get(1);
+        int i0 = ints1[0] - ints[0];
+        int i1 = ints1[1] - ints[1];
+        int j0 = item[0] - ints[0];
+        int j1 = item[1] - ints[1];
+        return j1 * i0 == i1 * j0;
     }
 }
 
