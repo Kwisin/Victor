@@ -1,6 +1,7 @@
 package com.example.demo.study.demo2503;
 
 
+import javax.swing.text.TabableView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,8 +9,11 @@ import java.util.List;
 public class Demo0305 {
 
     public static void main(String[] args) {
-        int i = new minDistance().minDistance("intention", "execution");
+//        int i = new minDistance().minDistance("intention", "execution");
+        int[] ints = {0, 0};
+        new sortColors().sortColors(ints);
         System.out.println();
+
     }
 
 }
@@ -122,6 +126,9 @@ class searchMatrix {
         }
         int[] temp = matrix[row - 1];
         for (int i = 0; i < row - 1; i++) {
+            if (matrix[i][0] == target || matrix[i + 1][0] == target) {
+                return true;
+            }
             if (matrix[i][0] < target && matrix[i + 1][0] > target) {
                 temp = matrix[i];
             }
@@ -158,26 +165,58 @@ class sortColors {
         int i = -1, j = -1, k = -1;
         for (int t = 0; t < nums.length; t++) {
             if (nums[t] == 0) {
-                i=0;
-                swap(nums, i, t);
+                i = t;
             }
-        }
-        for (int t = 0; t < nums.length; t++) {
             if (nums[t] == 1) {
-                swap(nums, j, t);
+                j = t;
             }
-        }
-        for (int t = 0; t < nums.length; t++) {
             if (nums[t] == 2) {
-                swap(nums, k, t);
+                k = t;
             }
         }
-
-//        for (int t = k + 1; ) {
-//
-//        }
-
-        return;
+        if (i > -1) {
+            swap(nums, 0, i);
+            i = 0;
+        }
+        if (j > 0) {
+            swap(nums, i == 0 ? 1 : 0, j);
+            j = (i == 0 ? 1 : 0);
+        }
+        if (k > 0) {
+            if (i == 0 && j == 1) {
+                swap(nums, 2, k);
+                k = 2;
+            }
+            if ((i == 0 && j == -1) || (i == -1 && j == 0)) {
+                swap(nums, 1, k);
+                k = 1;
+            }
+            if (i == -1 && j == -1) {
+                swap(nums, 0, k);
+                k = 0;
+            }
+        }
+        int max = Math.max(Math.max(i, j), k);
+        for (int index = max + 1; index < nums.length; ) {
+            if (nums[index] == 0) {
+                i++;
+                if (i == index) {
+                    index++;
+                    continue;
+                }
+                swap(nums, i, index);
+            } else if (nums[index] == 1) {
+                j++;
+                if (j == index) {
+                    index++;
+                    continue;
+                }
+                swap(nums, j + 1, index);
+            } else {
+                index++;
+                k++;
+            }
+        }
     }
 
     public void swap(int[] nums, int i, int j) {
