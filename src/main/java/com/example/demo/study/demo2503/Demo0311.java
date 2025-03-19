@@ -7,6 +7,8 @@ import java.util.List;
 public class Demo0311 {
 
     public static void main(String[] args) {
+//        boolean interleave = new isInterleave().isInterleave("aabcc", "dbbca", "aadbbcbcac");
+        int i = new numTrees().numTrees(3);
         System.out.println();
     }
 
@@ -19,14 +21,34 @@ public class Demo0311 {
 输入：n = 3
 输出：5
 示例 2：
-
 输入：n = 1
 输出：1
  */
 class numTrees {
-    public int numTrees(int n) {
-        return 0;
+    public int result = 0;
 
+    public int numTrees(int n) {
+        if (n == 0) {
+            return this.result;
+        }
+        dfs(new ArrayList<>(), 0, n - 1, n);
+        return this.result;
+    }
+
+    public void dfs(List<Integer> curr, int start, int end, int n) {
+        if (curr.size() == n) {
+            this.result++;
+            return;
+        }
+        if (start > end) {
+            return;
+        }
+        for (int i = start; i <= end; i++) {
+            curr.add(i);
+            dfs(curr, start, i - 1, n);
+            dfs(curr, i + 1, end, n);
+            curr.remove(curr.size() - 1);
+        }
     }
 }
 
@@ -46,6 +68,12 @@ t = t1 + t2 + ... + tm
 输入：s1 = "aabcc", s2 = "dbbca", s3 = "aadbbcbcac"
 输出：true
 示例 2：
+[1,1,1,0,0,0]
+[0,0,1,1,0,0]
+[0,]
+[0,]
+[0,]
+[0,]
 
 输入：s1 = "aabcc", s2 = "dbbca", s3 = "aadbbbaccc"
 输出：false
@@ -57,7 +85,27 @@ t = t1 + t2 + ... + tm
 
 class isInterleave {
     public boolean isInterleave(String s1, String s2, String s3) {
-        return false;
+        int s1Length = s1.length();
+        int s2Length = s2.length();
+        int s3Length = s3.length();
+        if (s3Length == 0) {
+            return true;
+        }
+        if (s1Length == 0 && s2Length == 0) {
+            return false;
+        }
+        boolean[][] dp = new boolean[s1Length + 1][s2Length + 1];
+        dp[0][0] = true;
+        for (int row = 0; row < s1Length + 1; row++) {
+            for (int col = 0; col < s2Length + 1; col++) {
+                if (row == 0 && col == 0) {
+                    continue;
+                }
+                dp[row][col] = (row > 0 && dp[row - 1][col] && s1.charAt(row - 1) == s3.charAt(row + col - 1)) ||
+                        (col > 0 && dp[row][col - 1] && s2.charAt(col - 1) == s3.charAt(row + col - 1));
+            }
+        }
+        return dp[s1Length][s2Length];
     }
 }
 
