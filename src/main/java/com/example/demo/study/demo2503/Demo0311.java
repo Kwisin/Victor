@@ -94,6 +94,9 @@ class isInterleave {
         if (s1Length == 0 && s2Length == 0) {
             return false;
         }
+        if (s1Length + s2Length != s3Length) {
+            return false;
+        }
         boolean[][] dp = new boolean[s1Length + 1][s2Length + 1];
         dp[0][0] = true;
         for (int row = 0; row < s1Length + 1; row++) {
