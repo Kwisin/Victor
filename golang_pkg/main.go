@@ -2,12 +2,15 @@ package main
 
 import (
 	"fmt"
+	"golang_study/demo"
 	"golang_study/pkg"
 )
 
 func main() {
 	//testNewObj()
-	testArrAndSlice()
+	//testArrAndSlice()
+	demo := new(demo.Demo250323)
+	demo.TestDeadLock()
 }
 
 func testNewObj() {
