@@ -1,16 +1,16 @@
-package demo
+package sub_dir_03
 
 import (
 	"fmt"
 	"sync"
 )
 
-type Demo250323 struct {
+type Class23 struct {
 	Name   string
 	Gender int
 }
 
-func (d *Demo250323) testMap() {
+func (d *Class23) TestMap() {
 	testMap := new(map[string]string)
 	(*testMap)[""] = ""
 	testMap2 := make(map[string]string)
@@ -22,7 +22,7 @@ func (d *Demo250323) testMap() {
 	delete(testMap2, "")
 }
 
-func (d *Demo250323) testArray() {
+func (d *Class23) TestArray() {
 	testSlice := new([]int64)
 	*testSlice = append(*testSlice, 0)
 	(*testSlice)[1] = 1
@@ -43,7 +43,7 @@ func (d *Demo250323) testArray() {
 
 }
 
-func (d *Demo250323) testForEach() {
+func (d *Class23) TestForEach() {
 	intSlice := make([]int64, 0)
 	intSlice = append(intSlice, 9)
 	for i := 0; i < len(intSlice); i++ {
@@ -69,7 +69,7 @@ func testThread(c chan int) {
 
 var temp int64
 
-func testMultiAdd(mutex *sync.Mutex, waitGroup *sync.WaitGroup) {
+func (d *Class23) TestMultiAdd(mutex *sync.Mutex, waitGroup *sync.WaitGroup) {
 	mutex.Lock()
 	for i := 0; i < 1000; i++ {
 		temp++
@@ -78,7 +78,7 @@ func testMultiAdd(mutex *sync.Mutex, waitGroup *sync.WaitGroup) {
 	mutex.Unlock()
 }
 
-func (d *Demo250323) TestChan() {
+func (d *Class23) TestChan() {
 	intChan := make(chan int)
 	go testThread(intChan)
 	//for c := range intChan {
@@ -88,25 +88,25 @@ func (d *Demo250323) TestChan() {
 	s := &sync.WaitGroup{}
 	s.Add(5)
 	for i := 0; i < 5; i++ {
-		go testMultiAdd(&sync.Mutex{}, s)
+		go d.TestMultiAdd(&sync.Mutex{}, s)
 	}
 	s.Wait()
 	fmt.Println(temp)
 }
 
-func (d *Demo250323) TestRaceCondition() {
+func (d *Class23) TestRaceCondition() {
 	round := 5
 	waitGroup := &sync.WaitGroup{}
 	waitGroup.Add(round)
 	mutex := &sync.Mutex{}
 	for i := 0; i < round; i++ {
-		go testMultiAdd(mutex, waitGroup)
+		go d.TestMultiAdd(mutex, waitGroup)
 	}
 	waitGroup.Wait()
 	fmt.Println(temp)
 }
 
-func (d *Demo250323) TestDeadLock() {
+func (d *Class23) TestDeadLock() {
 	var mutex1, mutex2 sync.Mutex
 	fmt.Println("goroutine 1 acquired mu")
 	go func() {
