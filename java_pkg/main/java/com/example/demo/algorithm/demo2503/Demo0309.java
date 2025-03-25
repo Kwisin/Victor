@@ -50,8 +50,7 @@ class generateTrees {
     List<TreeNode> result = new ArrayList<TreeNode>();
 
     public List<TreeNode> generateTrees(int n) {
-        dfs(1, n, new ArrayList<>(), n);
-        return result;
+        return dfs(1, n);
     }
 
     public void dfs(int start, int end, List<TreeNode> curr, int n) {
@@ -82,6 +81,27 @@ class generateTrees {
             dfs(i + 1, end, curr, n);
             curr.remove(curr.size() - 1);
         }
+    }
+
+    public List<TreeNode> dfs(int start, int end) {
+        ArrayList<TreeNode> result = new ArrayList<>();
+        if (start > end) {
+            result.add(null);
+            return result;
+        }
+        for (int i = start; i <= end; i++) {
+            List<TreeNode> left = dfs(start, i - 1);
+            List<TreeNode> right = dfs(i + 1, end);
+            for (TreeNode l : left) {
+                for (TreeNode r : right) {
+                    TreeNode tempHead = new TreeNode(i);
+                    tempHead.left = l;
+                    tempHead.right = r;
+                    result.add(tempHead);
+                }
+            }
+        }
+        return result;
     }
 }
 
