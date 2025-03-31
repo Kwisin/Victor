@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	var item sub_dir_03.Class25
+	var item sub_dir_03.Class31
 	item.TestDeadLock()
 }
 
