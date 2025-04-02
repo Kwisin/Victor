@@ -1,7 +1,7 @@
 import string
 import threading
 
-from demo.dir_25.sub_dir_03.class_24 import Base
+from demo.dir_25.base_class import Base
 
 
 class Class25(Base):

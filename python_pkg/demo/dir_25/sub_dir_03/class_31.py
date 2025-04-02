@@ -1,8 +1,7 @@
 import string
 import threading
 
-from class_24 import Base
-from threading import Lock
+from demo.dir_25.base_class import Base
 
 
 class Class31(Base):
@@ -49,7 +48,7 @@ class Class31(Base):
             print(f"index is {index} item is {item}")
 
     def test_tuple(self):
-        set([1,2,3])
+        set([1, 2, 3])
         tuple_items = (1, 2, 3)
         pass
 
