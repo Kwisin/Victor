@@ -1,3 +1,3 @@
-package sub_dir_03
+package dir_25
 
 type Base struct{}

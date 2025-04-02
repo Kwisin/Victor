@@ -1,8 +1,8 @@
-package sub_dir_03
+package dir_25
 
 import "sync"
 
-type class interface {
+type ClassInterface interface {
 	TestMap()
 	TestArray()
 	TestForEach()
