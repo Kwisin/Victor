@@ -20,7 +20,8 @@ public class Demo0408 {
 
 
     public static void main(String[] args) {
-        int i = new calculateMinimumHP().calculateMinimumHP(new int[][]{{-2,-3,3}, {-5,-4,-10}, {-2,30,-5}});
+        int i = new calculateMinimumHP().calculateMinimumHP(new int[][]{
+                {-2,-3,3}, {-5,-10,1}, {10,30,-5}});
         System.out.println();
 
     }
@@ -42,7 +43,9 @@ public class Demo0408 {
 [-5,-4,-10],
 [-2,30,-5]
 
-[-2,-3,3],[-5,-10,1],[10,30,-5]
+[-2,-3,3],
+[-5,-10,1],
+[10,30,-5]
 
 [-2,-3,3],
 [-5,10,[16,6]],
@@ -60,45 +63,99 @@ public class Demo0408 {
 
 输入：dungeon = [[0]]
 输出：1
+
+
+[1,-3,3],
+[0,-2,0],
+[-3,-3,-3]
+
+
+
+[1,2],[3,1],[3,4]
+[1,2],[2,1],[3,4]
+[3,1],[1,2],[3,1]
+
+[3,4],[4,1],[1,4]
+[6,6],[6,4],[4,4]
+[10,7],[7,4],[4,1]
 */
 class calculateMinimumHP {
+//    public int calculateMinimumHP(int[][] dungeon) {
+//        int row = dungeon.length;
+//        int col = dungeon[0].length;
+//        int[][][] ints = new int[row][col][2];
+//        int temp = dungeon[0][0] >= 0 ? 1 : -dungeon[0][0] + 1;
+//        ints[0][0] = new int[]{temp, temp + dungeon[0][0]};
+//        for (int j = 1; j < col; j++) {
+//            ints[0][j] = checkEnough(ints[0][j - 1], dungeon[0][j]);
+//        }
+//        for (int i = 1; i < row; i++) {
+//            ints[i][0] = checkEnough(ints[i - 1][0], dungeon[i][0]);
+//        }
+//        for (int i = 1; i < row; i++) {
+//            for (int j = 1; j < col; j++) {
+//                int[] ints1 = checkEnough(ints[i - 1][j], dungeon[i][j]);
+//                int[] ints2 = checkEnough(ints[i][j - 1], dungeon[i][j]);
+//                if (ints1[0] == ints2[0]) {
+//                    ints[i][j] = ints1[1] > ints2[1] ? ints1 : ints2;
+//                } else {
+//                    ints[i][j] = ints1[0] < ints2[0] ? ints1 : ints2;
+//                }
+//            }
+//        }
+//
+//        return ints[row - 1][col - 1][0];
+//    }
+// 1,2    -3     1+x -3 = 1
+//    public int[] checkEnough(int[] before, int newItem) {
+//        int[] temp = new int[2];
+//        if (before[1] + newItem > 0) {
+//            temp[0] = before[0];
+//            temp[1] = before[1] + newItem;
+//            return temp;
+//        }
+//        // 2,1   5,4   -3   5,1
+//        temp[0] = before[0] + 1 - before[1] - newItem;
+//        temp[1] = 1;
+//        return temp;
+//    }
+
     public int calculateMinimumHP(int[][] dungeon) {
         int row = dungeon.length;
         int col = dungeon[0].length;
         int[][][] ints = new int[row][col][2];
-        int temp = dungeon[0][0] >= 0 ? 1 : -dungeon[0][0] + 1;
-        ints[0][0] = new int[]{temp, temp + dungeon[0][0]};
-        for (int j = 1; j < col; j++) {
-            ints[0][j] = checkEnough(ints[0][j - 1], dungeon[0][j]);
+        int temp = dungeon[row - 1][col - 1] >= 0 ? 1 : -dungeon[row - 1][col - 1] + 1;
+        ints[row - 1][col - 1] = new int[]{temp, 1};
+        for (int j = col - 2; j >= 0; j--) {
+            ints[row - 1][j] = checkEnough(ints[row - 1][j + 1], dungeon[row - 1][j]);
         }
-        for (int i = 1; i < row; i++) {
-            ints[i][0] = checkEnough(ints[i - 1][0], dungeon[i][0]);
+        for (int i = row - 2; i >= 0; i--) {
+            ints[i][col - 1] = checkEnough(ints[i + 1][col - 1], dungeon[i][col - 1]);
         }
-        for (int i = 1; i < row; i++) {
-            for (int j = 1; j < col; j++) {
-                int[] ints1 = checkEnough(ints[i - 1][j], dungeon[i][j]);
-                int[] ints2 = checkEnough(ints[i][j - 1], dungeon[i][j]);
-                if (ints1[0] == ints2[0]) {
-                    ints[i][j] = ints1[1] > ints2[1] ? ints1 : ints2;
-                } else {
-                    ints[i][j] = ints1[0] < ints2[0] ? ints1 : ints2;
-                }
+        for (int i = row - 2; i >= 0; i--) {
+            for (int j = col - 2; j >= 0; j--) {
+                int[] ints1 = checkEnough(ints[i + 1][j], dungeon[i][j]);
+                int[] ints2 = checkEnough(ints[i][j + 1], dungeon[i][j]);
+                ints[i][j] = ints1[0] < ints2[0] ? ints1 : ints2;
             }
         }
 
-        return ints[row - 1][col - 1][0];
+        return ints[0][0][0];
     }
 
+    // 4,1  -3 ,0,1
     public int[] checkEnough(int[] before, int newItem) {
         int[] temp = new int[2];
-        if (before[1] + newItem > 0) {
-            temp[0] = before[0];
-            temp[1] = before[1] + newItem;
-            return temp;
+
+        if (before[0] > newItem) {
+            temp[0] = before[0] - newItem;
+            temp[1] = before[0];
+        } else {
+            temp[0] = 1;
+            temp[1] = 1 + newItem;
         }
-        // 2,1   5,4   -3   5,1
-        temp[0] = before[0] + 1 - before[1] - newItem;
-        temp[1] = 1;
         return temp;
     }
 }
+
+//
