@@ -93,3 +93,24 @@ func (c *Class04) TestDeadLock() {
 	syncMap := &sync.Map{}
 	syncMap.Store("", "")
 }
+
+func (c *Class04) TestGoroutine() {
+	fmt.Print("root start")
+	go func() {
+		for i := 0; i < 1000; i++ {
+			fmt.Print(fmt.Sprintf("go routine %d", i))
+		}
+	}()
+	for i := 0; i < 1000; i++ {
+		fmt.Print(i)
+	}
+	fmt.Print("root finish")
+}
+
+func (c *Class04) RootFunc() {
+	c.TestGoroutine()
+	fmt.Println("RootFunc")
+	for {
+
+	}
+}

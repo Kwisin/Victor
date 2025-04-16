@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"golang_study/demo/dir_25/sub_dir_03"
+	"golang_study/demo/dir_25/sub_dir_04"
 	"golang_study/pkg"
 )
 
 func main() {
-	var item sub_dir_03.Class31
-	item.TestDeadLock()
+	var item sub_dir_04.Class04
+	item.RootFunc()
 }
 
 func testNewObj() {
