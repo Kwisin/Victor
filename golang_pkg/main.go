@@ -9,7 +9,7 @@ import (
 func main() {
 	var item *sub_dir_04.Class24
 	println()
-	item.TestArray()
+	item.TestRaceCondition()
 }
 
 func testNewObj() {
