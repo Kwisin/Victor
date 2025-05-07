@@ -39,6 +39,6 @@ lldcba abcd  sll    s  sll  sllll
 
 class Solution {
     public List<List<Integer>> palindromePairs(String[] words) {
-
+        return null;
     }
 }
