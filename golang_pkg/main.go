@@ -2,14 +2,19 @@ package main
 
 import (
 	"fmt"
-	"golang_study/demo/dir_25/sub_dir_04"
 	"golang_study/pkg"
 )
 
 func main() {
-	var item *sub_dir_04.Class24
+	int64s := []int64{1, 2, 3, 4, 4, 5, 6, 7}
+	int64s = append(int64s[:3], int64s[4:]...)
 	println()
-	item.TestRaceCondition()
+
+	m := map[string]int64{
+		"1": 1,
+	}
+	i := m["2"]
+	println(i)
 }
 
 func testNewObj() {
