@@ -1,13 +1,19 @@
 package com.example.demo.algorithm.demo25.demo05;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Demo14 {
     public static void main(String[] args) {
-
+        solveNQueens solveNQueens = new solveNQueens();
+        List<List<String>> lists = solveNQueens.solveNQueens(2);
+        System.out.println();
     }
 
-    // 51
+
+}
+
+// 51
     /*
     51. N 皇后
         按照国际象棋的规则，皇后可以攻击与之处在同一行或同一列或同一斜线上的棋子。
@@ -32,11 +38,55 @@ public class Demo14 {
         输出：[["Q"]]
      */
 
-    class Solution {
-        public List<List<String>> solveNQueens(int n) {
-            return null;
+class solveNQueens {
+    private List<List<String>> list = new ArrayList<>();
 
+    public List<List<String>> solveNQueens(int n) {
+        int[] ints = new int[n];
+        for (int i = 0; i < n; i++) {
+            ints[i] = -1;
         }
+
+        dfs(ints, n, 0);
+        return this.list;
+    }
+
+    public void dfs(int[] exist, int n, int depth) {
+        if (exist[n - 1] >= 0) {
+            this.list.add(genStringByPosition(exist));
+            return;
+        }
+        for (int i = 0; i < n; i++) {
+            if (check(exist, depth, i)) {
+                exist[depth] = i;
+                dfs(exist, n, depth + 1);
+                exist[depth] = -1;
+            }
+        }
+    }
+
+    public boolean check(int[] exist, int depth, int position) {
+        for (int i = 0; i < exist.length; i++) {
+            if (exist[i] == -1) {
+                return true;
+            }
+            if (i == depth || exist[i] == position || (i - depth) * (i - depth) == (exist[i] - position) * (exist[i] - position)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public List<String> genStringByPosition(int[] exist) {
+        ArrayList<String> result = new ArrayList<>();
+        StringBuilder raw = new StringBuilder("");
+        for (int i = 0; i < exist.length; i++) {
+            raw.append(".");
+        }
+        for (int item : exist) {
+            result.add(raw.substring(0, item) + "Q" + raw.substring(item + 1, exist.length));
+        }
+        return result;
     }
 }
 
