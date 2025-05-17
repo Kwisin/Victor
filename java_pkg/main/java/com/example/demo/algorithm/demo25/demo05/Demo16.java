@@ -2,7 +2,8 @@ package com.example.demo.algorithm.demo25.demo05;
 
 public class Demo16 {
     public static void main(String[] args) {
-        int rob = new rob().dp(new int[]{1,2,3,13,2,4,5});
+//        int rob = new rob().dp(new int[]{1,2,3,13,2,4,5});
+        String abcd = new shortestPalindrome().shortestPalindrome("abcd");
         System.out.println();
     }
 }
@@ -53,7 +54,7 @@ class shortestPalindrome {
             }
             stringBuilder.append(s.charAt(n));
         }
-        return stringBuilder.reverse() + s;
+        return stringBuilder + s;
     }
 }
 
@@ -81,8 +82,8 @@ class rob {
     private int money = 0;
 
     public int rob(int[] nums) {
-        dfs(0, nums, new int[nums.length], 0);
-        return this.money;
+//        dfs(0, nums, new int[nums.length], 0);
+       return dp(nums);
     }
 
     public void dfs(int curr, int[] nums, int[] index, int position) {

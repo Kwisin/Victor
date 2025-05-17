@@ -1,0 +1,1 @@
+ tr -s ' ' '\n' < test.txt| grep -v '^$' | sort | uniq -c | sort -nr | awk '{printf "%-15s %s\n",$1,$2}'
