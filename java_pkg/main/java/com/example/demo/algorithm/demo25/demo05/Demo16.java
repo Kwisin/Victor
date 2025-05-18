@@ -3,7 +3,8 @@ package com.example.demo.algorithm.demo25.demo05;
 public class Demo16 {
     public static void main(String[] args) {
 //        int rob = new rob().dp(new int[]{1,2,3,13,2,4,5});
-        String abcd = new shortestPalindrome().shortestPalindrome("abcd");
+        shortestPalindrome shortestPalindrome = new shortestPalindrome();
+        shortestPalindrome.resolve("aaaaaaaa");
         System.out.println();
     }
 }
@@ -12,7 +13,7 @@ public class Demo16 {
 /*
 给定一个字符串 s，你可以通过在字符串前面添加字符将其转换为回文串。找到并返回可以用这种方式转换的最短回文串。
 示例 1：
-输入：s = "aacecaaa"
+输入：s = "aacecaaa" aaacecaa
 [1,1,0,0,0,0,0,0]
 [0,1,0,0,0,0,0,0]
 [0,0,1,0,0,0,0,0]
@@ -27,6 +28,11 @@ aaaaabaaaaa
 示例 2：
 输入：s = "abcd"
 输出："dcbabcd"
+
+
+A A A B C A B A
+0 1 2
+
  */
 class shortestPalindrome {
     public String shortestPalindrome(String s) {
@@ -56,6 +62,42 @@ class shortestPalindrome {
         }
         return stringBuilder + s;
     }
+
+    //AAABCABA
+    //AA B A A B C A B A  0,1
+    public int[] KMP(String s) {
+        int length = s.length();
+        int[] next = new int[length];
+        // j 是 首位最大重复数量，i是遍历的位置
+        int i = 1, j = 0;
+        while (i < length) {
+            if (s.charAt(i) != s.charAt(j) && j > 0) {
+                j = next[j - 1];
+            }
+            if (s.charAt(i) == s.charAt(j)) {
+                next[i] = j + 1;
+                j++;
+            }
+            i++;
+        }
+        return next;
+    }
+
+    public void resolve(String s) {
+        StringBuffer reverse = new StringBuffer(s).reverse();
+        int[] next = KMP(s);
+        int i = 0, j = 0;
+        while (i < reverse.length()) {
+            if (reverse.charAt(i) != s.charAt(j) && j > 0) {
+                j = next[j - 1];
+            }
+            if (reverse.charAt(i) == s.charAt(j)) {
+                j++;
+            }
+            i++;
+        }
+        System.out.println();
+    }
 }
 
 
@@ -83,7 +125,7 @@ class rob {
 
     public int rob(int[] nums) {
 //        dfs(0, nums, new int[nums.length], 0);
-       return dp(nums);
+        return dp(nums);
     }
 
     public void dfs(int curr, int[] nums, int[] index, int position) {
