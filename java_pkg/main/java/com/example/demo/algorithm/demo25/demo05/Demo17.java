@@ -1,10 +1,12 @@
 package com.example.demo.algorithm.demo25.demo05;
 
-import java.util.List;
+import java.util.*;
 
 public class Demo17 {
     public static void main(String[] args) {
-
+        ArrayList<String> strings = new ArrayList<>(Arrays.asList("hot", "dot", "dog", "lot", "log", "cog"));
+        List<List<String>> ladders = new findLadders().findLadders("hit", "cog", strings);
+        System.out.println();
     }
 }
 
@@ -32,8 +34,90 @@ public class Demo17 {
 查找字典树
  */
 class findLadders {
-    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
-        return null;
+    List<List<String>> result = new ArrayList<>();
+    int minSize = Integer.MAX_VALUE;
 
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        if (!wordList.contains(endWord)) {
+            return null;
+        }
+        wordList.add(beginWord);
+        HashMap<String, List<String>> stringListHashMap = buildGraphic(wordList);
+        dfs(stringListHashMap, new HashSet<>(), new ArrayList<>(), beginWord, endWord);
+        return this.result;
+    }
+
+    public void dfs(HashMap<String, List<String>> stringListHashMap, HashSet<String> exist, List<String> array, String curr, String endWord) {
+
+        if (curr.equals(endWord)) {
+            if (array.size() > minSize) {
+                return;
+            } else if (array.size() == minSize) {
+                this.result.add(new ArrayList<>(array));
+            } else {
+                this.result.clear();
+                this.result.add(new ArrayList<>(array));
+                this.minSize = array.size();
+            }
+        }
+
+        List<String> strings = stringListHashMap.get(curr);
+        for (String s : strings) {
+            if (exist.contains(s)) {
+                continue;
+            }
+            exist.add(s);
+            array.add(s);
+            dfs(stringListHashMap, exist, array, s, endWord);
+            exist.remove(s);
+            array.remove(array.size() - 1);
+        }
+    }
+
+    public HashMap<String, List<String>> buildGraphic(List<String> wordList) {
+        HashSet<String> wordSet = new HashSet<>();
+        for (int i = 0; i < wordList.size(); i++) {
+            String curr = wordList.get(i);
+            if (wordSet.contains(curr)) {
+                wordList.remove(i);
+            } else {
+                wordSet.add(curr);
+            }
+        }
+
+
+        HashMap<String, List<String>> graphic = new HashMap<>();
+        for (int i = 0; i < wordList.size(); i++) {
+            String target = wordList.get(i);
+            int j = i + 1;
+            while (j < wordList.size()) {
+                String temp = wordList.get(j);
+                if (check(target, temp)) {
+                    List<String> targetList = graphic.getOrDefault(target, new ArrayList<>());
+                    targetList.add(temp);
+                    graphic.put(target, targetList);
+
+                    List<String> tempList = graphic.getOrDefault(temp, new ArrayList<>());
+                    tempList.add(target);
+                    graphic.put(temp, tempList);
+                }
+                j++;
+            }
+
+        }
+
+        return graphic;
+    }
+
+    public boolean check(String target, String temp) {
+        if (target.length() != temp.length()) {
+            return false;
+        }
+        int diff = 0;
+        for (int i = 0; i < target.length(); i++) {
+            diff += target.charAt(i) != temp.charAt(i) ? 1 : 0;
+        }
+
+        return diff == 1;
     }
 }
