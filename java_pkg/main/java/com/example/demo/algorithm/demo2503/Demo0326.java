@@ -7,7 +7,7 @@ public class Demo0326 {
 
     public static void main(String[] args) {
         String s = new numberToWords().numberToWords(1123451211);
-        System.out.println();
+        System.out.println(s);
     }
 
 }

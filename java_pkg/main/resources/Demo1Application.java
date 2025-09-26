@@ -1,4 +1,4 @@
-package com.example.demo;
+package main.resources;
 
 import com.example.demo.service.TestComponentBean;
 import com.example.demo.service.TestDemo;
