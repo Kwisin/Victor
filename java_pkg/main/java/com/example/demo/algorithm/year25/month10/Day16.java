@@ -74,16 +74,51 @@ public class Day16 {
         解释: “2*3+2” 和 “2+3*2” 的值都是8。
         示例 3:
 
-        输入: num = "3456237490", target = 9191
+        输入: num = "30456237490", target = 9191
         输出: []
         解释: 表达式 “3456237490” 无法得到 9191 。
 
 
      */
-    
+
 
     public List<String> addOperators(String num, int target) {
-        return null;
+        List<String> result = new ArrayList<>();
+        addOperatorsDFS(num, target, 0, 0, 0, "", result);
+        return result;
+    }
+
+    public void addOperatorsDFS(String num, int target, int index, long currSum, long preNum, String expression, List<String> result) {
+        if (index == num.length() && currSum == target) {
+            result.add(expression);
+            return;
+        }
+
+        for (int i = index + 1; i <= num.length(); i++) {
+            String currStr = num.substring(index, i);
+            if (currStr.startsWith("0") && currStr.length() > 1) {
+                // 做一个剪枝，0开头是不合法数字，直接跳过后续所有可能
+                break;
+            }
+            long currNum = Long.parseLong(currStr);
+
+            if (index == 0) {
+                // 首次处理直接加进去
+                addOperatorsDFS(num, target, i, currNum, currNum, currStr, result);
+            } else {
+                // 非首次处理考虑 + - *
+
+                //+
+                addOperatorsDFS(num, target, i, currSum + currNum, currNum, expression + "+" + currStr, result);
+
+                //-
+                addOperatorsDFS(num, target, i, currSum - currNum, -currNum, expression + "-" + currStr, result);
+
+                //*
+                addOperatorsDFS(num, target, i, currSum - preNum + preNum * currNum, preNum * currNum, expression + "*" + currStr, result);
+            }
+
+        }
 
     }
 }

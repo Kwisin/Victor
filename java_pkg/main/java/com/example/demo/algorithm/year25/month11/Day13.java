@@ -1,8 +1,9 @@
 package com.example.demo.algorithm.year25.month11;
 
+import java.util.Arrays;
+
 public class Day13 {
     public static void main(String[] args) {
-
 
 
     }
@@ -11,6 +12,16 @@ public class Day13 {
     初始时有 n 个灯泡处于关闭状态。第一轮，你将会打开所有灯泡。接下来的第二轮，你将会每两个灯泡关闭第二个。
     第三轮，你每三个灯泡就切换第三个灯泡的开关（即，打开变关闭，关闭变打开）。第 i 轮，你每 i 个灯泡就切换第 i 个灯泡的开关。直到第 n 轮，你只需要切换最后一个灯泡的开关。
     找出并返回 n 轮后有多少个亮着的灯泡。
+
+
+    10
+    第二轮：10/2 = 5，会操作五个开关
+    第三轮：10/3 = 3，会操作三个开关
+    第四轮：10/4 = 2，会操作两个开关
+    第五轮：10/5 = 2，还是会操作五个开关
+    [1,1,1,1,1,1,1,1,1,1] 10个
+    [1,0,1,0,1,0,1,0,1,0] 5个
+    [1,0,0,0,1,1,1,0,0,0] 5-1+1-1个 = 4
 
     示例 1：输入：n = 3
     输出：1
@@ -29,10 +40,35 @@ public class Day13 {
 
     提示：
     0 <= n <= 10^9
+
+    约瑟夫环：模拟O(n²) → 递推公式O(n) → 直接公式O(1)
+    楼梯问题：递归O(2ⁿ) → DP O(n) → 斐波那契公式O(log n)
+    组合数计算：阶乘O(n) → 杨辉三角O(n²) → 卢卡斯定理O(log n)
      */
 
     public int bulbSwitch(int n) {
+        // 初始化灯的状态和亮灯数
+        int[] ints = new int[n];
+        Arrays.fill(ints, 1);
+        int curr = n;
 
+        for (int i = 2; i <= n; i++) {
+            int checkIndex = i - 1;
+            while (checkIndex < n) {
+                if (ints[checkIndex] == 1) {
+                    //关灯
+                    ints[checkIndex] = 0;
+                    curr--;
+                } else {
+                    //开灯
+                    ints[checkIndex] = 1;
+                    curr++;
+                }
+                checkIndex += i;
+            }
+
+        }
+        return curr;
     }
 
     /*  335
@@ -54,6 +90,29 @@ public class Day13 {
      */
 
     public boolean isSelfCrossing(int[] distance) {
+        int length = distance.length;
+        if (length < 4) {
+            return false;
+        }
+        /*
+        len(n)>= len(n-2)  &&  len(n-1)<=len(n-3)
+        len(n)>=len(n-2)-len(n-4) && len(n-1)>=len(n-3) - len(n-5)
+        len(n)>= len(n-2)-len(n-4). && len(n-1)=len(n-3)
+         */
+        for (int curr = 3; curr < length; curr++) {
+            if (distance[curr] >= distance[curr - 2] && distance[curr - 1] <= distance[curr - 3]) {
+                return true;
+            }
+            if (curr >= 5 && distance[curr] >= (distance[curr - 2] - distance[curr - 4]) &&
+                    distance[curr - 1] >= (distance[curr - 3] - distance[curr - 5])) {
+                return true;
+            }
+            if (curr >= 4 && distance[curr]>=distance[curr-2]-distance[curr-4] && distance[curr-1]==distance[curr-3]){
+                return true;
+            }
 
+        }
+        return false;
     }
 }
+
