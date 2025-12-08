@@ -7,7 +7,8 @@ import java.util.Stack;
 
 public class Day26 {
     public static void main(String[] args) {
-
+        int i = new Day26().sumMIn(new int[]{5,4,3,2,1,4,6,2,4,7});
+        System.out.println(i);
     }
 
     /*
@@ -205,6 +206,11 @@ public class Day26 {
     
     示例 1：
     输入：arr = [3,1,2,4]
+    [3,4,5,2]
+    [-1,0,1]
+    [5,4,3,2,1,4,6,2,4,7]
+[5,4,3,2,1,4,6,2,4,7]
+[5,4,3,2,1,4,6,2,4,7]
     输出：17
     解释：
     子数组为 [3]，[1]，[2]，[4]，[3,1]，[1,2]，[2,4]，[3,1,2]，[1,2,4]，[3,1,2,4]。 
@@ -228,19 +234,32 @@ public class Day26 {
             return 0;
         }
         long result = 0;
-        for (int i = 0; i < nums.length; i++) {
-            int currMin = nums[i];
-            long tempResult = nums[i];
-            for (int j = i + 1; j < nums.length; j++) {
-                if (nums[j] < currMin) {
-                    currMin = nums[j];
-                }
-                tempResult += currMin;
+        Stack<Integer> ascStack = new Stack<>();
+        int length = nums.length;
+        int[] left = new int[length];
+        int[] right = new int[length];
+        for (int i = 0; i < length; i++) {
+            while (!ascStack.isEmpty() && nums[i] < nums[ascStack.peek()]) {
+                Integer pop = ascStack.pop();
             }
-            result += tempResult;
+            ascStack.push(i);
+            left[i] = ascStack.isEmpty() ? -1: left[ascStack.peek()];
+        }
+        ascStack.clear();
+        for (int i = length - 1; i >= 0; i--) {
+            while (!ascStack.isEmpty() && nums[i] < nums[ascStack.peek()]) {
+                Integer pop = ascStack.pop();
+            }
+            ascStack.push(i);
+            right[i] = ascStack.isEmpty()? length: right[ascStack.peek()];
         }
 
-        return (int) (result % (Math.pow(10, 9) + 7));
+        for (int i = 0; i < length; i++) {
+            result += (long) (((long) (i - left[i]) * (right[i] - i) * nums[i]) % (Math.pow(10, 9) + 7));
+        }
+
+
+        return Math.toIntExact(result);
     }
 
 }
