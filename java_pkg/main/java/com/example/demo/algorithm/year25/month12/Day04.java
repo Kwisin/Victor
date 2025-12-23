@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Day04 {
     public static void main(String[] args) {
-        
+
     }
     
     /*
@@ -30,7 +30,7 @@ public class Day04 {
     对于每个柱子，找到它左边和右边第一个比它矮的位置，那么以这个柱子的高度能形成的最大矩形宽度就确定了。
     使用单调栈可以在 O(n) 时间内找到每个柱子的左右边界。
      */
-    
+
     /*
     218. 天际线问题
     城市的天际线是从远处观看该城市中所有建筑物形成的轮廓的外部轮廓。给你所有建筑物的位置和高度，请返回由这些建筑物形成的天际线。
@@ -73,9 +73,59 @@ public class Day04 {
      */
     public List<List<Integer>> getSkyline(int[][] buildings) {
         List<List<Integer>> result = new ArrayList<>();
-        
-        // TODO: 实现天际线算法
-        
+        List<int[]> nodes = new ArrayList<>();
+        for (int[] building : buildings) {
+            nodes.add(new int[]{building[0], building[2], -1});
+            nodes.add(new int[]{building[1], building[2], 1});
+        }
+
+        /*
+        同一 x坐标：不区分入和出，统一高度大的在前
+        不同 x坐标：
+                两个节点一个入一个出：入的节点在前
+                两个节点同样的：x小的在前
+         */
+        nodes.sort((a, b) -> {
+            if (a[0] != b[0]) {
+                return a[0] - b[0];
+            }
+            if (a[2] == -1 && b[2] == -1) {
+                return b[1] - a[1];
+            }
+            if (a[2] == 1 && b[2] == 1) {
+                return a[1] - b[1];
+            }
+            if (a[1] == b[1]) {
+                return a[2] == -1 ? -1 : 1;
+            }
+            return a[2] == -1 ? -1 : 1;
+        });
+
+        PriorityQueue<Integer> height = new PriorityQueue<>((a, b) -> b - a);
+        HashMap<Integer, Integer> delayRe = new HashMap<>();
+        height.add(0);
+        int preHeight = 0;
+        for (int[] node : nodes) {
+            if (node[2] == -1) {
+                // 更新高度
+                height.add(node[1]);
+            } else {
+                delayRe.put(node[1], delayRe.getOrDefault(node[1], 0) + 1);
+            }
+
+            while (delayRe.getOrDefault(height.peek(), 0) > 0) {
+                Integer poll = height.poll();
+                delayRe.put(poll, delayRe.get(poll) - 1);
+            }
+
+            if (!height.isEmpty() && height.peek() != preHeight) {
+                int currHeight = height.peek();
+                result.add(new ArrayList<>(Arrays.asList(node[0], currHeight)));
+                preHeight = currHeight;
+            }
+        }
+
+
         return result;
     }
 }
