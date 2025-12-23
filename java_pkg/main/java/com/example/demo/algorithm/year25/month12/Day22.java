@@ -40,26 +40,27 @@ public class Day22 {
             return;
         }
 
+        int length = nums.length;
+        int i = length - 2;
+
         // 1. 从后往前找第一个升序对 (i, i+1)，满足 nums[i] < nums[i+1]
-        int i = nums.length - 2;
         while (i >= 0 && nums[i] >= nums[i + 1]) {
             i--;
         }
 
-        // 2. 如果找到了这样的 i (即不是全降序)
+        // 2. 如果找到了 i (不是全降序)
         if (i >= 0) {
             // 从后往前找第一个比 nums[i] 大的数
-            int j = nums.length - 1;
+            int j = length - 1;
             while (j > i && nums[j] <= nums[i]) {
                 j--;
             }
-            // 3. 交换 nums[i] 和 nums[j]
+            // 3. 交换
             swap(nums, i, j);
         }
 
         // 4. 反转 i 之后的所有元素 (变成升序)
-        // 如果 i < 0 (全降序)，这里会反转整个数组，正好符合题目要求
-        reverse(nums, i + 1, nums.length - 1);
+        reverse(nums, i + 1, length - 1);
     }
 
     private void swap(int[] nums, int i, int j) {
